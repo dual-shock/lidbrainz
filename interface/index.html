@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+
+    </style>
+</head>
+<body>
+
+<form id="search-form">
+    <input type="text" id="search-input" placeholder="search...">
+    <button type="submit">send search</button>
+    <div id="results">results</div>
+</form>
+
+<script>
+
+    const input = document.getElementById('search-input');
+    const button = document.querySelector('button');
+    const resultsDiv = document.getElementById('results');
+
+    async function searchReleaseGroups(query) {
+        const params = new URLSearchParams({ query: query});
+        const response = await fetch(`/lidbrainz/search_musicbrainz/release_groups?${params}`);
+        if (!response.ok) {
+            const error = await response.json();
+            throw new Error(error.detail || 'Search failed');
+        }
+        return response.json();
+    }
+    button.addEventListener('click', async (event) => {
+        event.preventDefault();
+        const query = input.value.trim();
+        if (query) {
+            try {
+                const data = await searchReleaseGroups(query);
+                resultsDiv.innerText = JSON.stringify(data, null, 2);
+            } catch (error) {
+                resultsDiv.innerText = `Error: ${error.message}`;
+            }
+        }
+    });
+</script>
+</body>
+</html>

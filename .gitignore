@@ -1,0 +1,12 @@
+.venv/
+env/
+venv/
+
+__pycache__/
+*.py[cod]
+
+.env
+docker-compose.yml
+
+.vscode/
+test/

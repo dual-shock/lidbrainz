@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<Container version="2">
+  <Name>lidbrainz</Name>
+  <Repository>dualshock/lidbrainz:dev</Repository>
+  <Registry>https://hub.docker.com/r/dualshock/lidbrainz</Registry>
+  <Network>bridge</Network>
+  <Privileged>false</Privileged>
+  <Support>https://github.com/dual-shock/lidbrainz</Support>
+  <Project>https://github.com/dual-shock/lidbrainz</Project>
+  <Overview>search bar for musicbrainz to send to lidarr</Overview>
+  <Category>Tools: Status:Stable</Category>
+  <WebUI>http://[IP]:[PORT:8080]/health</WebUI>
+  <TemplateURL>false</TemplateURL>
+  <Icon>https://raw.githubusercontent.com/dual-shock/lidbrainz/refs/heads/main/lidbrainz-icon.png</Icon>
+  <ExtraParams/>
+  <PostArgs/>
+  <CPUset/>
+  <DateInstalled></DateInstalled>
+  <DonateText/>
+  <DonateLink/>
+  <Requires/>
+  <Config Name="WebUI Port" Target="8080" Default="22000" Mode="tcp" Description="Port of the web ui" Type="Port" Display="always" Required="true" Mask="false">22000</Config>
+</Container>
