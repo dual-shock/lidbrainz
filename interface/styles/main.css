@@ -39,7 +39,8 @@
 
 body {
     position: relative;
-    min-height: 100vh;
+    height: 100vh;
+    overflow:hidden;
 }
 
 
@@ -118,39 +119,51 @@ body {
     transform: scale(0.98);
 }
 
+
 .results-box{
     background-color: var(--background-color-light);
     border: 1px solid var(--white-secondary-text);
     padding: 10px;
     margin-top: 10px;
-    position:relative;
+    display: flex;
+    flex-direction: column; 
 }
-.results-box::after{
-    content: "";
-    display: table;
-    clear: both;
+
+/* Example header row (no wrapper div) */
+.results-box.example {
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
 }
-.results-box .artistName,
-.results-box .releaseTitle,
-.results-box .releaseType{
-    float:left;
+
+/* Release group header row */
+.results-box .release-group-header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    width: 100%;
 }
-.results-box .matchScore,
-.results-box .addButton
-{
-    float:right;
+
+.results-box .releaseGrpArtist,
+.results-box .releaseGrpName,
+.results-box .releaseGrpType{
+    flex-shrink: 1;
+    min-width: 0;
+}
+
+.results-box .matchScore {
+    margin-left: auto;
+}
+
+.results-box .addButton {
+    margin-left: 10px;
+    margin-top: -6px;
+    margin-bottom: -5px;
 }
 .results-box .addButton{
     background-color: var(--background-color-decor);
     border: 1px solid var(--green-secondary-text);
-    
-    margin-left:30px;
-    padding-left:10px;
-    padding-right:10px;
-    margin-top: -5px;
-    margin-bottom: -5px;
-    padding-top:5px;
-    padding-bottom:5px;
+    padding: 5px 10px;
     color: var(--green-text);
     font-family: var(--font-family);
     cursor: pointer;
@@ -163,21 +176,50 @@ body {
     transform: scale(0.98);
 }
 
-.results-box.example > .matchScore {
-    margin-right:75px;
+.results-box > hr{
+    display: block;
+    height: 1px;
+    border: 0;
+    border-top: 1px solid var(--white-secondary-text);
+    margin-top: 12.5px;
+    margin-right:10px;
+    margin-left:10px;
 }
 
+
 .results-box > .release-group-releases {
-    position:absolute;
-    top:calc(100% + 10px);
-    padding-left:30px;
-    width:calc(100% - 30px);
+    padding-left: 15px;
+    padding-top: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
 }
-.release-group-releases > .releaseName {
-    float:left;
+
+.release-group-releases > .release {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
 }
-.release-group-releases > .releaseYear {
-    float:right;
+
+.release > .releaseName {
+    flex-shrink: 1;
+    min-width: 0;
+}
+
+.release > .releaseYear {
+    margin-left: auto;
+}
+
+.release > .releaseAddButton {
+    margin-left: 15px;
+    cursor: pointer;
+}
+
+.release > .releaseAddButton:hover {
+    text-decoration: underline;
+}
+.release .releaseAddButton:active{
+    transform: scale(0.98);
 }
 
 /* ? FONT STYLES */
@@ -207,6 +249,7 @@ h4 {
     font-size:0.90em;
     font-weight:var(--font-retina)
 }
+
 
 /* ? TEXT COLOR */
 pre.default{
@@ -247,6 +290,9 @@ h3.red{
 }
 
 h4.green {
+    color: var(--green-text);
+}
+h4.green-secondary{
     color: var(--green-secondary-text);
 }
 h4.red {
@@ -263,6 +309,15 @@ h4.default-hover{
 }
 h4.default-hover:hover{
     color: var(--main-hover-text);
+}
+h4.white{
+    color: var(--white-text);
+}
+h4.white-secondary{
+    color: var(--white-secondary-text);
+}
+h4.white-tertiary{
+    color: var(--white-tertiary-text);
 }
 
 
@@ -319,9 +374,21 @@ h3.glow.green{
 
 
 /* ? Specific elements */
+
+
+
+/* Main 3-column layout */
+#main-container {
+    display: flex;
+    width: 100%;
+    flex-direction:column;
+    height:100vh;
+}
+
+
 #header{
-    padding:10px;
-    height:fit-content;
+    padding:2vh;
+    height:6em;
 }
 #title {
     display: flex;
@@ -329,12 +396,10 @@ h3.glow.green{
     align-items: center;
 }
 
-
-/* Main 3-column layout */
-#main-container {
+#main-content {
     display: flex;
-    width: 100%;
-    height: calc(100vh - 80px); /* Adjust based on header height */
+    flex-direction: row;
+    height:calc(96vh - 4em);
 }
 
 #left-sidebar {
@@ -376,6 +441,7 @@ h3.glow.green{
     padding: 10px;
     display: flex;
     flex-direction: column;
+    height:calc(96vh - 4em);
 }
 
 #search-section {
@@ -384,13 +450,30 @@ h3.glow.green{
 
 #results-section {
     flex: 1;
+    overflow-y: hidden;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+}
+#results-section > .scrollable {
+    flex: 1;
     overflow-y: auto;
-    margin-top: 10px;
+    min-height: 0;
 }
 
 .result-item {
     padding: 10px;
     margin-bottom: 10px;
+}
+.results-box.example {
+    margin-bottom:10px;
+}
+.results-box.example > .matchScore {
+    margin-left: auto;
+    margin-right: 55px;
+}
+.scrollable :nth-child(1) {
+    margin-top: 0;
 }
 
 

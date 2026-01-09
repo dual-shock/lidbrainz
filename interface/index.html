@@ -10,140 +10,193 @@
 </head>
 <body>   <div class="background-layer"></div>
 
-<div id="header">
-    <div id="title">
+
+
+
+
+<div id="main-container">
+    <div id="header">
+        <div id="title">
         <!-- <h1 class="text glow main-secondary" style="float:left;">▒Lid</h1>
         <h1 class="text glow default" style="float:left;">Brainz</h1> -->
 <pre class="text glow default">
-       __    _     ______             _         
-      / /   (_)___/ / __ )_________ _(_)___ ____
-     / /   / / __  / __  / ___/ __ `/ / __ Y_  /
-    / /___/ / /_/ / /_/ / /  / /_/ / / / / // /_
-   /_____/_/\__,_/_____/_/   \__,_/_/_/ /_//___/
-                                                
+    __    _     ______             _         
+   / /   (_)___/ / __ )_________ _(_)___ ____
+  / /   / / __  / __  / ___/ __ `/ / __ Y_  /
+ / /___/ / /_/ / /_/ / /  / /_/ / / / / // /_
+/_____/_/\__,_/_____/_/   \__,_/_/_/ /_//___/                                 
 </pre>
-    </div>    
-</div>
-
-<!-- <form id="search-form">
-    <input type="text" id="search-input" placeholder="search...">
-    <button type="submit">send search</button>
-    <div id="results">results</div>
-</form>
-<div id="system-info">
-    <button id="fetch-system-info">Fetch Lidarr System Info</button>
-    <pre id="system-info-results">System info will appear here</pre>
-</div> -->
-
-<!-- <div class="normal-box example-div" style="visibility: hidden;">
-    <h3 class="text glow default">▇ Example Title Text default</h3>
-    <h4 class="text default">▇ Example Body Text default</h4>
-    <h4 class="text default-muted">▇ Example Body Text muted</h4>
-    <h4 class="text default-hover">▇ Example Body Text hover</h4>
-<br>
-    <h3 class="text glow green">▇ Example Title Text green</h3>
-    <h4 class="text green">▇ Example Body Text green</h3>
-<br>
-    <h3 class="text glow red">▇ Example Title Text red</h3>
-    <h4 class="text red">▇ Example Body Text red</h4>
-</div>
-
-<div class="normal-box glow example-div" style="visibility: hidden;">
-    <h3 class="text glow default oblique">▇ Example Title Text default</h3>
-    <h4 class="text default oblique">▇ Example Body Text default</h4>
-    <h4 class="text default-muted oblique">▇ Example Body Text muted</h4>
-    <h4 class="text default-hover oblique">▇ Example Body Text hover</h4>
-<br>
-    <h3 class="text glow green oblique">▇ Example Title Text green</h3>
-    <h4 class="text green oblique">▇ Example Body Text green</h4>
-<br>
-    <h3 class="text glow red oblique">▇ Example Title Text red</h3>
-    <h4 class="text red oblique">▇ Example Body Text red</h4>
-</div> -->
-
-<div id="main-container">
-    <div id="left-sidebar">
-        <h3 class="text default">Event Log</h3>
-        <div id="event-log">
-            <!-- Events will be added here dynamically, newest on top -->
-            <div class="event-item">
-                <span class="event-time">12:00:00</span>
-                <span class="event-message">Example event message</span>
-            </div>
-        </div>
-        <p id="version">© LidBrainz V 0.1.1</p>
+        </div>    
     </div>
-
-    <div id="middle-content">
-        <div id="search-section">
-            <div class="input-box">
-                <input type="text" id="search-input" name="search-input" class="text default" placeholder="ArtistName - ReleaseTitle">
-                <button type="button">Search</button>
+    <div id="main-content">
+        <div id="left-sidebar">
+            <h3 class="text default">Event Log</h3>
+            <div id="event-log">
+                <!-- Events will be added here dynamically, newest on top -->
+                <div class="event-item">
+                    <span class="event-time">12:00:00</span>
+                    <span class="event-message">Example event message</span>
+                </div>
             </div>
         </div>
-        <div id="results-section">
-            <div id="filter-boxes">
-                <label class="text default">Filters:</label>
-                <select id="format-filter" class="text default">
-                    <option value="all">All Formats</option>
-                    <option value="vinyl">Vinyl</option>
-                    <option value="cd">CD</option>
-                    <option value="digital">Digital</option>
-                </select>
-                <select id="year-filter" class="text default">
-                    <option value="all">All Years</option>
-                    <option value="2024">2024</option>
-                    <option value="2023">2023</option>
-                    <option value="2022">2022</option>
-                </select>
-            </div>
-            <div class="results-box example">
-                <h3 class="text white-tertiary artistName">░ artistName ░&nbsp;</h3>
-                <h3 class="text white releaseTitle">░ releaseGroup ░&nbsp;</h3>
-                <h3 class="text white-tertiary releaseType">░ releaseType ░&nbsp;</h3>
-                <h3 class="text default matchScore">░ matchScore ░&nbsp;</h3>
-            </div>
-            <!-- Search results will appear here -->
 
-            <div class="results-box release-group-result">
-                <h3 class="text white-tertiary artistName">NameofArtist -&nbsp;</h3>
-                <h3 class="text white releaseTitle">TitleofReleaseGroup (Year)</h3>
-                <h3 class="text white-tertiary releaseType">&nbsp;[Album] &nbsp;</h3>
-                
-                <button class="text default addButton" type="button">Add</button>
-                <h3 class="text default matchScore">Score : 99</h3>                    
-                <div class="release-group-releases">
-                    <h3 class="text white releaseName">└─╲ Specific Release Name</h3>
-                    <h3 class="text white releaseYear"> 2012-12-21</h3>
+        <div id="middle-content">
+            <div id="search-section">
+                <div class="input-box">
+                    <input type="text" id="search-input" name="search-input" class="text default" placeholder="ArtistName - ReleaseTitle">
+                    <button type="button">Search</button>
+                </div>
+            </div>
+
+            <div id="results-section">
+
+                <div class="results-box example">
+                    <h3 class="text white-tertiary releaseGrpArtist">░ artistName ░&nbsp;</h3>
+                    <h3 class="text white releaseGrpName">░ releaseGroup ░&nbsp;</h3>
+                    <h3 class="text white-tertiary releaseGrpType">░ releaseType ░&nbsp;</h3>
+                    <h3 class="text default matchScore">░ matchScore ░&nbsp;</h3>
+                </div>
+                <!-- Search results will appear here -->
+                <div class="scrollable">
+                    <div class="results-box release-group-result">
+                        <div class="release-group-header">
+                            <h3 class="text white-tertiary releaseGrpArtist">NameofArtist -&nbsp;</h3>
+                            <h3 class="text white releaseGrpName">TitleofReleaseGroup (Year)</h3>
+                            <h3 class="text white-tertiary releaseGrpType">&nbsp;[Album] &nbsp;</h3>
+                            
+                            <h3 class="text default matchScore">Score : 99</h3>
+                            <button class="text default addButton" type="button">Add</button>
+                        </div>
+                        <hr>
+                        <div class="release-group-releases">   
+                            <div class="release">
+                                <h4 class="text white releaseName">└─╲ Specific Release Name</h4>
+                                <h4 class="text white-secondary releaseType"></h4>
+
+                                <h4 class="text white releaseYear">2012-12-21</h4>
+                                <h4 class="text green releaseAddButton">Add release</h4>
+                            </div>
+                            <div class="release">
+                                <h4 class="text white releaseName">└─╲ Specific Release Name</h4>
+                                <h4 class="text white-secondary releaseType"></h4>
+
+                                <h4 class="text white releaseYear">2012-12-21</h4>
+                                <h4 class="text green releaseAddButton">Add release</h4>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="results-box release-group-result">
+                        <div class="release-group-header">
+                            <h3 class="text white-tertiary releaseGrpArtist">NameofArtist -&nbsp;</h3>
+                            <h3 class="text white releaseGrpName">TitleofReleaseGroup (Year)</h3>
+                            <h3 class="text white-tertiary releaseGrpType">&nbsp;[Album] &nbsp;</h3>
+                            
+                            <h3 class="text default matchScore">Score : 99</h3>
+                            <button class="text default addButton" type="button">Add</button>
+                        </div>
+                        <hr>
+                        <div class="release-group-releases">   
+                            <div class="release">
+                                <h4 class="text white releaseName">└─╲ Specific Release Name</h4>
+                                <h4 class="text white-secondary releaseType"></h4>
+
+                                <h4 class="text white releaseYear">2012-12-21</h4>
+                                <h4 class="text green releaseAddButton">Add release</h4>
+                            </div>
+                            <div class="release">
+                                <h4 class="text white releaseName">└─╲ Specific Release Name</h4>
+                                <h4 class="text white-secondary releaseType"></h4>
+
+                                <h4 class="text white releaseYear">2012-12-21</h4>
+                                <h4 class="text green releaseAddButton">Add release</h4>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="results-box release-group-result">
+                        <div class="release-group-header">
+                            <h3 class="text white-tertiary releaseGrpArtist">NameofArtist -&nbsp;</h3>
+                            <h3 class="text white releaseGrpName">TitleofReleaseGroup (Year)</h3>
+                            <h3 class="text white-tertiary releaseGrpType">&nbsp;[Album] &nbsp;</h3>
+                            
+                            <h3 class="text default matchScore">Score : 99</h3>
+                            <button class="text default addButton" type="button">Add</button>
+                        </div>
+                        <hr>
+                        <div class="release-group-releases">   
+                            <div class="release">
+                                <h4 class="text white releaseName">└─╲ Specific Release Name</h4>
+                                <h4 class="text white-secondary releaseType"></h4>
+
+                                <h4 class="text white releaseYear">2012-12-21</h4>
+                                <h4 class="text green releaseAddButton">Add release</h4>
+                            </div>
+                            <div class="release">
+                                <h4 class="text white releaseName">└─╲ Specific Release Name</h4>
+                                <h4 class="text white-secondary releaseType"></h4>
+
+                                <h4 class="text white releaseYear">2012-12-21</h4>
+                                <h4 class="text green releaseAddButton">Add release</h4>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="results-box release-group-result">
+                        <div class="release-group-header">
+                            <h3 class="text white-tertiary releaseGrpArtist">NameofArtist -&nbsp;</h3>
+                            <h3 class="text white releaseGrpName">TitleofReleaseGroup (Year)</h3>
+                            <h3 class="text white-tertiary releaseGrpType">&nbsp;[Album] &nbsp;</h3>
+                            
+                            <h3 class="text default matchScore">Score : 99</h3>
+                            <button class="text default addButton" type="button">Add</button>
+                        </div>
+                        <hr>
+                        <div class="release-group-releases">   
+                            <div class="release">
+                                <h4 class="text white releaseName">└─╲ Specific Release Name</h4>
+                                <h4 class="text white-secondary releaseType"></h4>
+
+                                <h4 class="text white releaseYear">2012-12-21</h4>
+                                <h4 class="text green releaseAddButton">Add release</h4>
+                            </div>
+                            <div class="release">
+                                <h4 class="text white releaseName">└─╲ Specific Release Name</h4>
+                                <h4 class="text white-secondary releaseType"></h4>
+
+                                <h4 class="text white releaseYear">2012-12-21</h4>
+                                <h4 class="text green releaseAddButton">Add release</h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div id="right-sidebar">
+            <div id="connectivity-section">
+                <h3 class="text default">Connectivity</h3>
+                <div class="status-box">
+                    <span class="status-label">Lidarr</span>
+                    <span class="status-indicator connected"></span>
+                </div>
+                <div class="status-box">
+                    <span class="status-label">MusicBrainz</span>
+                    <span class="status-indicator connected"></span>
+                </div>
+            </div>
+            <div id="settings-section">
+                <h3 class="text default">Settings</h3>
+                <div class="setting-toggle">
+                    <label>Auto-add to Lidarr</label>
+                    <input type="checkbox" id="auto-add-toggle">
+                </div>
+                <div class="setting-toggle">
+                    <label>Show notifications</label>
+                    <input type="checkbox" id="notifications-toggle">
                 </div>
             </div>
         </div>
     </div>
 
-    <div id="right-sidebar">
-        <div id="connectivity-section">
-            <h3 class="text default">Connectivity</h3>
-            <div class="status-box">
-                <span class="status-label">Lidarr</span>
-                <span class="status-indicator connected"></span>
-            </div>
-            <div class="status-box">
-                <span class="status-label">MusicBrainz</span>
-                <span class="status-indicator connected"></span>
-            </div>
-        </div>
-        <div id="settings-section">
-            <h3 class="text default">Settings</h3>
-            <div class="setting-toggle">
-                <label>Auto-add to Lidarr</label>
-                <input type="checkbox" id="auto-add-toggle">
-            </div>
-            <div class="setting-toggle">
-                <label>Show notifications</label>
-                <input type="checkbox" id="notifications-toggle">
-            </div>
-        </div>
-    </div>
 </div>
 
 
