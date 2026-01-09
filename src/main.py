@@ -9,7 +9,6 @@ def main():
     Config.check()
 
 
-
     api_app = start()
 
     config = uvicorn.Config(

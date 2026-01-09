@@ -388,6 +388,7 @@ async def test():
     await lidarr_client.close_client()
 
 if TEST_SEARCH:
-    asyncio.run(test())
+    #asyncio.run(test())
+    pass
 
     
