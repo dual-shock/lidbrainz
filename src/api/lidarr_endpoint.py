@@ -1,19 +1,23 @@
 import httpx
+import asyncio
+import traceback
 from src.config import Config
 
 #? You test this whole program by running "python -m src.api.lidarr_endpoint"
 #? you search, and then pick a release group id to add to lidarr
 
-TEST_SEARCH : bool = True
+TEST_SEARCH : bool = False
 
 #TODO check if check artist and check release-group can return a value
 #TODO that is not an empty dict but also not an artist, as this could
 #TODO lead to false positive in the fully add search method flow
 
 #TODO handle the case of an artist being present without their release group
+#? i think i fixed this, who knows
 
 #TODO create option for not auto downloading or monitoring in full add
 #TODO   create interactive search function
+
 
 class LidarrClient:
 
@@ -70,9 +74,20 @@ class LidarrClient:
             )
 
             quality_profiles.raise_for_status()
+
+
+            metadata_profiles = await client.get(
+                url="/api/v1/metadataprofile",
+                params={
+
+                }
+            )
+            metadata_profiles.raise_for_status()
+
             system_info = {
                 "root_folders": root_folders.json(),
-                "quality_profiles": quality_profiles.json()
+                "quality_profiles": quality_profiles.json(),
+                "metadata_profiles": metadata_profiles.json()
             }
             return system_info
         except Exception as e:
@@ -138,6 +153,7 @@ class LidarrClient:
                 "metadataProfileId": metadata_profile_id,
                 "monitored": True,
                 "addOptions": {
+                    "createArtistFolder": True ,
                     "searchForMissingAlbums": False,
                     "monitor": "none",
                     "albumsToMonitor":[
@@ -186,7 +202,7 @@ class LidarrClient:
     async def add_release_group_to_library(self,) -> dict:
         try: 
             client = await self.get_client()
-            # Implement the actual add logic here
+            
             print("INFO: adding release group to Lidarr library - FUNCTION NOT IMPLEMENTED YET")
             return {}
         except Exception as e:
@@ -218,6 +234,7 @@ class LidarrClient:
         
     async def set_release_in_release_group(self, release_group_data: dict, release_mbid: str) -> dict:
         # release_group_data here is expected to be a return of get/album on lidarr api
+        # id make an object for all this, cba
         try:
             print(f"INFO: setting release with mbid: {release_mbid} in release group in Lidarr")
             client = await self.get_client()
@@ -262,6 +279,116 @@ class LidarrClient:
         except Exception as e:
             print(f"ERROR: failed to trigger search for release group in Lidarr: {e}")
             return {}
+
+    #! #################################################################
+    #! currently unused cause it doesnt work, the auto post-grab not respected
+   
+    async def refresh_release_group_metadata(self, release_group_lrid: int, max_wait: float = 30.0, poll_interval: float = 0.3) -> dict:
+        try:
+            print(f"INFO: triggering release-group metadata refresh to affirm metadata presence before triggering download")
+            client = await self.get_client()
+            payload = {
+                "name": "RefreshAlbum",
+                "albumIds": [
+                    release_group_lrid
+                ]
+            }
+            
+            command_response = await client.post(
+                url="/api/v1/command",
+                json=payload,
+            )
+            
+            command_response.raise_for_status()
+            command_response = command_response.json()
+            command_id = command_response.get("id")
+
+
+            print(f"INFO: waiting for metadata refresh command with id: {command_id} to complete")
+            if command_id:
+                elapsed = 0.0
+
+                while elapsed < max_wait:
+                    command_status = await client.get(
+                        url=f"/api/v1/command/{command_id}",
+                        params={
+                            
+                        }
+                    )
+                    command_status.raise_for_status()
+                    command_status = command_status.json()
+                    status = command_status.get("status")
+                    if status == "completed":
+                        print(f"INFO: metadata refresh command with id: {command_id} completed")
+                        return command_status
+                    if status == "failed":
+                        print(f"ERROR: metadata refresh command with id: {command_id} failed")
+                        return {}
+                    print(f"INFO: metadata refresh command with id: {command_id} status: {status}, waiting...")
+                    await asyncio.sleep(poll_interval)
+                    elapsed += poll_interval
+            print(f"ERROR: metadata refresh command with id: {command_id} did not complete in time")
+            return {}
+
+
+        except Exception as e:
+            print(f"ERROR: failed to trigger metadata refresh in Lidarr: {e}")
+            return {}
+        
+    #! #################################################################
+    #! #################################################################
+
+    async def refresh_artist_metadata(self, artist_lrid: int, max_wait: float = 30.0, poll_interval: float = 0.3) -> dict:
+        try:
+            print(f"INFO: triggering artist metadata refresh to affirm metadata presence before triggering download")
+            client = await self.get_client()
+            payload = {
+                "name": "RefreshArtist",
+                "artistIds": [
+                    artist_lrid
+                ]
+            }
+            
+            command_response = await client.post(
+                url="/api/v1/command",
+                json=payload,
+            )
+            
+            command_response.raise_for_status()
+            command_response = command_response.json()
+            command_id = command_response.get("id")
+
+
+            print(f"INFO: waiting for metadata refresh command with id: {command_id} to complete")
+            if command_id:
+                elapsed = 0.0
+
+                while elapsed < max_wait:
+                    command_status = await client.get(
+                        url=f"/api/v1/command/{command_id}",
+                        params={
+                            
+                        }
+                    )
+                    command_status.raise_for_status()
+                    command_status = command_status.json()
+                    status = command_status.get("status")
+                    if status == "completed":
+                        print(f"INFO: metadata refresh command with id: {command_id} completed")
+                        return command_status
+                    if status == "failed":
+                        print(f"ERROR: metadata refresh command with id: {command_id} failed")
+                        return {}
+                    print(f"INFO: metadata refresh command with id: {command_id} status: {status}, waiting...")
+                    await asyncio.sleep(poll_interval)
+                    elapsed += poll_interval
+            print(f"ERROR: metadata refresh command with id: {command_id} did not complete in time")
+            return {}
+
+
+        except Exception as e:
+            print(f"ERROR: failed to trigger metadata refresh in Lidarr: {e}")
+            return {}
     
     async def fully_add_release(
         self,
@@ -284,16 +411,17 @@ class LidarrClient:
             if not root_folder_path:
                 print("INFO: no root folder path specified, fetching from Lidarr system info")
                 system_info = await self.get_system_info()
+                
                 root_folder_path = system_info["root_folders"][0]["path"]
             
             print(f"INFO: checking if artist with mbid: {artist_mbid}, name {artist_name} exists in Lidarr library")
             artist = await self.check_artist_in_library(artist_mbid)
             if not artist: 
                 print("INFO: artist not found in library")
-                added_artist = await self.add_artist_to_library(
+                artist = await self.add_artist_to_library(
                     artist_mbid=artist_mbid,
                     release_group_mbid=release_group_mbid,
-                    root_folder_path=root_folder_path, # type: ignore  this will be str
+                    root_folder_path=root_folder_path, # type: ignore  this will be str for suuuure
                     artist_name=artist_name,
                     quality_profile_id=quality_profile_id,
                     metadata_profile_id=metadata_profile_id,
@@ -304,10 +432,29 @@ class LidarrClient:
             else:
                 print(f"INFO: artist was already added")
                 release_group = await self.check_release_group_in_library(release_group_mbid)
+
+            if isinstance(artist, list): 
+                artist = artist[0]
                         
             if not release_group:
-                print("ERROR: release group not found in library after artist addition, unexpected state")
-                return {}
+                print(f"INFO: release group not found in library yet, forcing artist metadata refresh to affirm release group presence")
+                await self.refresh_artist_metadata(
+                    artist_lrid=artist["id"]
+                )
+
+            release_group = await self.check_release_group_in_library(release_group_mbid)
+
+            if not release_group:
+                print(
+f"""ERROR: release group with mbid: {release_group_mbid} still not found in Lidarr
+library after artist add and metadata refresh, this is likely because 
+YOUR METADATA PROFILE BLOCKS THIS RELEASE / DOESNT FIND IT. 
+Either try a less strict metadata profile or add release manually."""
+                )
+                #respond with internal server error to the route 
+                raise Exception("Release group not found in Lidarr after artist add and metadata refresh")
+
+                return {}    
 
             if isinstance(release_group, list): 
                 release_group = release_group[0]
@@ -327,6 +474,15 @@ class LidarrClient:
 
             if auto_download:
                 print(f"INFO: Auto download is true")
+                print(f"DEBUG: artist is {artist}")
+                print(f"DEBUG: artist lrid is {artist['id']}")
+                
+
+                await self.refresh_artist_metadata(
+                    artist_lrid=artist["id"]
+                )
+                await asyncio.sleep(1.0)
+                print(f"INFO: triggering search for release group to start download")
                 await self.trigger_search_for_release_group(
                     release_group_lrid=release_group['id']
                 )
@@ -334,6 +490,7 @@ class LidarrClient:
             return monitored_release_group
         except Exception as e:
             print(f"ERROR: failed to fully add release to Lidarr: {e}")
+            print(f"ERROR: Error is coming from: {traceback.format_exc()}")
             return {}
 
 
@@ -355,7 +512,15 @@ async def test():
     lidarr_client = LidarrClient()
     mb_client = MusicBrainzClient()
 
+    system_info = await lidarr_client.get_system_info()
+    with open("lidarr_system_info_debug.json","w",encoding="utf-8") as f:
+        import json
+        json.dump(system_info,f,indent=4)
+
     full_search = await mb_client.fully_search(test_query)
+    import json
+    with open("full_search_debug.json","w",encoding="utf-8") as f:
+        json.dump(full_search,f,indent=4)
 
     is_first = True
 
@@ -388,7 +553,7 @@ async def test():
     await lidarr_client.close_client()
 
 if TEST_SEARCH:
-    #asyncio.run(test())
+    asyncio.run(test())
     pass
 
     

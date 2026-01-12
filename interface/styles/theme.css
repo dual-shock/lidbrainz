@@ -1,4 +1,4 @@
-/* Retina (lightest) */
+
 @font-face {
     font-family: 'main-font';
     src: url('./font/font-Retina.otf') format('opentype');
@@ -12,7 +12,8 @@
     font-style: italic;
 }
 
-/* Regular */
+
+
 @font-face {
     font-family: 'main-font';
     src: url('./font/font-Regular.otf') format('opentype');
@@ -26,7 +27,8 @@
     font-style: italic;
 }
 
-/* Medium */
+
+
 @font-face {
     font-family: 'main-font';
     src: url('./font/font-Medium.otf') format('opentype');
@@ -40,7 +42,8 @@
     font-style: italic;
 }
 
-/* Bold */
+
+
 @font-face {
     font-family: 'main-font';
     src: url('./font/font-Bold.otf') format('opentype');
@@ -54,7 +57,9 @@
     font-style: italic;
 }
 
-/* ExtraBold */
+
+
+
 @font-face {
     font-family: 'main-font';
     src: url('./font/font-ExtraBold.otf') format('opentype');
@@ -68,7 +73,9 @@
     font-style: italic;
 }
 
-/* Retina SemiCondensed */
+
+
+
 @font-face {
     font-family: 'main-font-semi';
     src: url('./font/font-Retina-SemiCondensed.otf') format('opentype');
@@ -82,7 +89,9 @@
     font-style: italic;
 }
 
-/* Regular SemiCondensed */
+
+
+
 @font-face {
     font-family: 'main-font-semi';
     src: url('./font/font-SemiCondensed.otf') format('opentype');
@@ -96,7 +105,9 @@
     font-style: italic;
 }
 
-/* Medium SemiCondensed */
+
+
+
 @font-face {
     font-family: 'main-font-semi';
     src: url('./font/font-Medium-SemiCondensed.otf') format('opentype');
@@ -110,7 +121,9 @@
     font-style: italic;
 }
 
-/* Bold SemiCondensed */
+
+
+
 @font-face {
     font-family: 'main-font-semi';
     src: url('./font/font-Bold-SemiCondensed.otf') format('opentype');
@@ -124,7 +137,9 @@
     font-style: italic;
 }
 
-/* ExtraBold SemiCondensed */
+
+
+
 @font-face {
     font-family: 'main-font-semi';
     src: url('./font/font-ExtraBold-SemiCondensed.otf') format('opentype');
@@ -138,7 +153,9 @@
     font-style: italic;
 }
 
-/* Retina Condensed */
+
+
+
 @font-face {
     font-family: 'main-font-condensed';
     src: url('./font/font-Retina-Condensed.otf') format('opentype');
@@ -152,7 +169,9 @@
     font-style: italic;
 }
 
-/* Regular Condensed */
+
+
+
 @font-face {
     font-family: 'main-font-condensed';
     src: url('./font/font-Condensed.otf') format('opentype');
@@ -166,7 +185,9 @@
     font-style: italic;
 }
 
-/* Medium Condensed */
+
+
+
 @font-face {
     font-family: 'main-font-condensed';
     src: url('./font/font-Medium-Condensed.otf') format('opentype');
@@ -180,7 +201,9 @@
     font-style: italic;
 }
 
-/* Bold Condensed */
+
+
+
 @font-face {
     font-family: 'main-font-condensed';
     src: url('./font/font-Bold-Condensed.otf') format('opentype');
@@ -194,7 +217,9 @@
     font-style: italic;
 }
 
-/* ExtraBold Condensed */
+
+
+
 @font-face {
     font-family: 'main-font-condensed';
     src: url('./font/font-ExtraBold-Condensed.otf') format('opentype');
@@ -210,19 +235,19 @@
 
 
 :root {
-    /* Font families - easy switching */
+    
     --font-family: 'main-font', "segoe ui";
     --font-family-semi: 'main-font-semi', "segoe ui";
     --font-family-condensed: 'main-font-condensed', "segoe ui";
     
-    /* Font weights for reference */
+    
     --font-retina: 300;
     --font-regular: 400;
     --font-medium: 500;
     --font-bold: 700;
     --font-extrabold: 800;
     
-    /* Colors */
+    
     --background-color: #151515;
     --background-color-input:#111111 ;
     --background-color-light: #222222;
@@ -267,6 +292,7 @@
     --white-text: #D2C1B9;
     --white-secondary-text: #928781;
     --white-tertiary-text: #9F8876;
-    
+    --white-glow-text: rgba(228, 216, 211, 0.504)
+
 }
 

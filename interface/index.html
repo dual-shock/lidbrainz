@@ -16,6 +16,9 @@
 
 <div id="main-container">
     <div id="header">
+        <div id="logo" style="visibility:hidden;">
+            <img class="glow default" src="assets/icon.svg" alt="LidBrainz Logo" height="64px">
+        </div>
         <div id="title">
         <!-- <h1 class="text glow main-secondary" style="float:left;">▒Lid</h1>
         <h1 class="text glow default" style="float:left;">Brainz</h1> -->
@@ -24,155 +27,135 @@
    / /   (_)___/ / __ )_________ _(_)___ ____
   / /   / / __  / __  / ___/ __ `/ / __ Y_  /
  / /___/ / /_/ / /_/ / /  / /_/ / / / / // /_
-/_____/_/\__,_/_____/_/   \__,_/_/_/ /_//___/                                 
+/_____/_/\__,_/_____/_/   \__,_/_/_/ /_//___/
 </pre>
-        </div>    
+        </div> 
+        <div id="header-ghost-for-centering">
+
+        </div>
     </div>
     <div id="main-content">
         <div id="left-sidebar">
-            <h3 class="text default">Event Log</h3>
+            <!-- <h3 class="text default">Event Log</h3>
             <div id="event-log">
-                <!-- Events will be added here dynamically, newest on top -->
+
                 <div class="event-item">
                     <span class="event-time">12:00:00</span>
                     <span class="event-message">Example event message</span>
                 </div>
-            </div>
+            </div> -->
         </div>
 
         <div id="middle-content">
             <div id="search-section">
                 <div class="input-box">
                     <input type="text" id="search-input" name="search-input" class="text default" placeholder="ArtistName - ReleaseTitle">
-                    <button type="button">Search</button>
+                    <button type="button" id="search-input-button">Search</button>
                 </div>
             </div>
 
             <div id="results-section">
 
-                <div class="results-box example">
+                <!-- <div class="results-box example">
                     <h3 class="text white-tertiary releaseGrpArtist">░ artistName ░&nbsp;</h3>
                     <h3 class="text white releaseGrpName">░ releaseGroup ░&nbsp;</h3>
                     <h3 class="text white-tertiary releaseGrpType">░ releaseType ░&nbsp;</h3>
                     <h3 class="text default matchScore">░ matchScore ░&nbsp;</h3>
-                </div>
+                </div> -->
                 <!-- Search results will appear here -->
-                <div class="scrollable">
-                    <div class="results-box release-group-result">
+                <div class="scrollable" id="search-results-scrollable">
+                    <!-- <div class="results-box release-group-result">
                         <div class="release-group-header">
-                            <h3 class="text white-tertiary releaseGrpArtist">NameofArtist -&nbsp;</h3>
-                            <h3 class="text white releaseGrpName">TitleofReleaseGroup (Year)</h3>
-                            <h3 class="text white-tertiary releaseGrpType">&nbsp;[Album] &nbsp;</h3>
-                            
-                            <h3 class="text default matchScore">Score : 99</h3>
-                            <button class="text default addButton" type="button">Add</button>
+                            <div class="shrinkable">
+                                <h3 class="text white-tertiary releaseGrpArtist">梶浦由記 -&nbsp;</h3>
+                                <h3 class="text white releaseGrpName">Boogiepop: Music Album Inspired by Boogiepop and Others (2000)&nbsp;</h3>
+                                <h3 class="text white-tertiary releaseGrpType">[Album]</h3>                                
+                            </div>
+                            <div class="non-shrinkable">
+                                <h3 class="text default matchScore">Score : 99</h3>
+                                <button class="text default addButton" type="button">Add</button>                                
+                            </div>
                         </div>
                         <hr>
                         <div class="release-group-releases">   
                             <div class="release">
-                                <h4 class="text white releaseName">└─╲ Specific Release Name</h4>
-                                <h4 class="text white-secondary releaseType"></h4>
-
-                                <h4 class="text white releaseYear">2012-12-21</h4>
-                                <h4 class="text green releaseAddButton">Add release</h4>
+                                <div class="shrinkable">
+                                    <h4 class="text white releaseName">└─╲  ブギーポップは笑わない ～Boogiepop Phantom Original Soundtrack</h4>
+                                    <h4 class="text default releaseFormat">&nbsp;[CD]▷╲</h4>
+                                    <h4 class="text default releaseTracks">(6x7),</h4>
+                                    <h4 class="text default-secondary releaseStatus">&nbsp;Official</h4>
+                                </div>
+                                <div class="non-shrinkable">
+                                    <img src="https://flagcdn.com/us.svg">
+                                    <h4 class="text white releaseCountry">US&nbsp;¦</h4>
+                                    <h4 class="text white releaseYear">2012-12-21</h4>
+                                    <h4 class="text green releaseAddButton">Add release</h4>
+                                </div>
                             </div>
                             <div class="release">
-                                <h4 class="text white releaseName">└─╲ Specific Release Name</h4>
-                                <h4 class="text white-secondary releaseType"></h4>
-
-                                <h4 class="text white releaseYear">2012-12-21</h4>
+                                <div class="shrinkable">
+                                <h4 class="text white releaseName">└─╲ Another Specific Release Name</h4>
+                                <h4 class="text default releaseFormat">&nbsp;[Vinyl]▷╲</h4>
+                                <h4 class="text default releaseTracks">(2x7),</h4>
+                                <h4 class="text default-secondary releaseStatus">&nbsp;Unofficial</h4>
+                                </div>
+                                <div class="non-shrinkable">
+                                <img src="https://flagcdn.com/un.svg">
+                                <h4 class="text white releaseCountry">WX&nbsp;¦</h4>
+                                <h4 class="text white releaseYear">2014-11-12</h4>
                                 <h4 class="text green releaseAddButton">Add release</h4>
+                                </div>
                             </div>
                         </div>
                     </div>
                     <div class="results-box release-group-result">
                         <div class="release-group-header">
-                            <h3 class="text white-tertiary releaseGrpArtist">NameofArtist -&nbsp;</h3>
-                            <h3 class="text white releaseGrpName">TitleofReleaseGroup (Year)</h3>
-                            <h3 class="text white-tertiary releaseGrpType">&nbsp;[Album] &nbsp;</h3>
-                            
-                            <h3 class="text default matchScore">Score : 99</h3>
-                            <button class="text default addButton" type="button">Add</button>
-                        </div>
-                        <hr>
-                        <div class="release-group-releases">   
-                            <div class="release">
-                                <h4 class="text white releaseName">└─╲ Specific Release Name</h4>
-                                <h4 class="text white-secondary releaseType"></h4>
-
-                                <h4 class="text white releaseYear">2012-12-21</h4>
-                                <h4 class="text green releaseAddButton">Add release</h4>
+                            <div class="shrinkable">
+                                <h3 class="text white-tertiary releaseGrpArtist">NameofArtist -&nbsp;</h3>
+                                <h3 class="text white releaseGrpName">TitleofReleaseGroup (Year)</h3>
+                                <h3 class="text white-tertiary releaseGrpType">&nbsp;[Album] &nbsp;</h3>
                             </div>
-                            <div class="release">
-                                <h4 class="text white releaseName">└─╲ Specific Release Name</h4>
-                                <h4 class="text white-secondary releaseType"></h4>
-
-                                <h4 class="text white releaseYear">2012-12-21</h4>
-                                <h4 class="text green releaseAddButton">Add release</h4>
+                            <div class="non-shrinkable">
+                                <h3 class="text default matchScore">Score : 99</h3>
+                                <button class="text default addButton" type="button">Add</button>
                             </div>
                         </div>
-                    </div>
-                    <div class="results-box release-group-result">
-                        <div class="release-group-header">
-                            <h3 class="text white-tertiary releaseGrpArtist">NameofArtist -&nbsp;</h3>
-                            <h3 class="text white releaseGrpName">TitleofReleaseGroup (Year)</h3>
-                            <h3 class="text white-tertiary releaseGrpType">&nbsp;[Album] &nbsp;</h3>
-                            
-                            <h3 class="text default matchScore">Score : 99</h3>
-                            <button class="text default addButton" type="button">Add</button>
-                        </div>
-                        <hr>
-                        <div class="release-group-releases">   
-                            <div class="release">
-                                <h4 class="text white releaseName">└─╲ Specific Release Name</h4>
-                                <h4 class="text white-secondary releaseType"></h4>
+                    </div> -->
 
-                                <h4 class="text white releaseYear">2012-12-21</h4>
-                                <h4 class="text green releaseAddButton">Add release</h4>
-                            </div>
-                            <div class="release">
-                                <h4 class="text white releaseName">└─╲ Specific Release Name</h4>
-                                <h4 class="text white-secondary releaseType"></h4>
-
-                                <h4 class="text white releaseYear">2012-12-21</h4>
-                                <h4 class="text green releaseAddButton">Add release</h4>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="results-box release-group-result">
-                        <div class="release-group-header">
-                            <h3 class="text white-tertiary releaseGrpArtist">NameofArtist -&nbsp;</h3>
-                            <h3 class="text white releaseGrpName">TitleofReleaseGroup (Year)</h3>
-                            <h3 class="text white-tertiary releaseGrpType">&nbsp;[Album] &nbsp;</h3>
-                            
-                            <h3 class="text default matchScore">Score : 99</h3>
-                            <button class="text default addButton" type="button">Add</button>
-                        </div>
-                        <hr>
-                        <div class="release-group-releases">   
-                            <div class="release">
-                                <h4 class="text white releaseName">└─╲ Specific Release Name</h4>
-                                <h4 class="text white-secondary releaseType"></h4>
-
-                                <h4 class="text white releaseYear">2012-12-21</h4>
-                                <h4 class="text green releaseAddButton">Add release</h4>
-                            </div>
-                            <div class="release">
-                                <h4 class="text white releaseName">└─╲ Specific Release Name</h4>
-                                <h4 class="text white-secondary releaseType"></h4>
-
-                                <h4 class="text white releaseYear">2012-12-21</h4>
-                                <h4 class="text green releaseAddButton">Add release</h4>
-                            </div>
-                        </div>
-                    </div>
                 </div>
 
             </div>
         </div>
 
         <div id="right-sidebar">
-            <div id="connectivity-section">
+            <div class="settings-box" id="metadata-settings">
+                <h3 class="text default">░ ▒ ▓ metadata profile ▓ ▒ ░</h3>
+                <hr>
+                <div>
+                    <div id="metadata-profile-select" class="text default">
+                    
+                    </div>
+                </div>
+            </div>
+            <div class="settings-box" id="quality-settings">
+                <h3 class="text white">░ ▒ ▓ quality profile ▓ ▒ ░</h3>
+                <hr>
+                <div>
+                    <div id="quality-profile-select" class="text default">
+                    
+                    </div>
+                </div>
+            </div>
+            <div class="settings-box" id="folder-settings">
+                <h3 class="text default">░ ▒ ▓ folder select ▓ ▒ ░</h3>
+                <hr>
+                <div>
+                    <div id="folder-profile-select" class="text default">
+                    
+                    </div>
+                </div>
+            </div>
+            <!-- <div id="connectivity-section">
                 <h3 class="text default">Connectivity</h3>
                 <div class="status-box">
                     <span class="status-label">Lidarr</span>
@@ -193,7 +176,7 @@
                     <label>Show notifications</label>
                     <input type="checkbox" id="notifications-toggle">
                 </div>
-            </div>
+            </div> -->
         </div>
     </div>
 

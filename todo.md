@@ -3,6 +3,6 @@
 specific releases as monitored, just send it all with the artist payload (if artist doesnt exist)
 - in lidarr, add handling for when api requests answer with possibly something (like forbidden, so payload gets sent) but doesnt register it as an artist or album actually being present, i.e, dont count any filled string as confirmation that an artist / album is present (lidarr_endpoint)
 
+- add functionality for advanced searching like specifying artist and 
 
-UI: 
-- have a matrix of dots that go from one corner to the other
+- remove unused python libs, like colorama from the livi thing

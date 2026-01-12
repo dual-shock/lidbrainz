@@ -1,24 +1,30 @@
 import asyncio 
 import time
 import httpx
+from collections import deque
 from src.config import Config
 
 class RateLimit:
-    interval = 1.75
+    max_requests = 4
+    time_window = 5.0 
 
     def __init__(self):
-        self.last_req_time: float = 0.0
+        self.request_times = deque(maxlen=self.max_requests)
     
     async def wait(self) -> None: 
         print("INFO: checking if musicbrainz rate limit wait needed")
         curr_time = time.monotonic()
-        elapsed_time = curr_time - self.last_req_time
-
-        if elapsed_time < self.interval:
-            wait_time = self.interval - elapsed_time
-            print(f"INFO: waiting {wait_time:.2f}s to respect musicbrainz rate limit . . .")
-            await asyncio.sleep(wait_time)
-        self.last_req_time = time.monotonic()
+        
+        if len(self.request_times) >= self.max_requests:
+            oldest_time = self.request_times[0]
+            time_since_oldest = curr_time - oldest_time
+            
+            if time_since_oldest < self.time_window:
+                wait_time = self.time_window - time_since_oldest
+                print(f"INFO: waiting {wait_time:.2f}s to respect musicbrainz rate limit (4 req/5s)...")
+                await asyncio.sleep(wait_time)
+                curr_time = time.monotonic()
+        self.request_times.append(curr_time)
 
 
 class MusicBrainzClient:
@@ -30,20 +36,21 @@ class MusicBrainzClient:
         self.client: httpx.AsyncClient | None = None
     
     async def get_client(self) -> httpx.AsyncClient:
+
         if not self.client or self.client.is_closed:
             print("INFO: Musicbrainz httpx AsyncClient is None or closed, creating new one")
-            print(f"INFO: user agent is {Config.MUSICBRAINZ_AGENT}")
+            print(f"INFO: user agent is {Config.MUSICBRAINZ_USERAGENT}")
             self.client = httpx.AsyncClient(
                 base_url="https://musicbrainz.org/ws/2",
                 headers={
-                    "User-Agent": Config.MUSICBRAINZ_AGENT,
+                    "User-Agent": Config.MUSICBRAINZ_USERAGENT or "",
                     "Accept": "application/json"
                 },
                 timeout=httpx.Timeout(
                     connect=10.0, #init connection
                     write=10.0,  #request send
                     read=30.0, #request answer
-                    pool=10.0   #connection from pool, TODO wth is a pool and why do i need it
+                    pool=10.0   #connection from pool
                 ),
                 limits=httpx.Limits(
                     max_connections=1,
@@ -65,7 +72,7 @@ class MusicBrainzClient:
                 pass  
             self.client = None
 
-    async def request_with_retries(self, endpoint: str, params: dict, retry: bool = True) -> dict: #turning retry on and off to be implemented
+    async def request_with_retries(self, endpoint: str, params: dict, retry: bool = True) -> dict: #TODO turning retry on and off to be implemented
         attempt = 0
         print(f"INFO: requesting MusicBrainz endpoint {endpoint} with params {params}")
         while attempt < self.RETRIES:
@@ -82,7 +89,7 @@ class MusicBrainzClient:
                 print(f"INFO: received response on attempt {attempt} with status code {response.status_code}")
                 return response.json()
             except (httpx.ConnectError, httpx.ConnectTimeout, httpx.ReadTimeout) as exc:
-                delay = self.rate_limit.interval + (self.rate_limit.interval * attempt / 2) 
+                delay = 2.0 + (attempt * 0.5)
                 if attempt < self.RETRIES:
                     print(f"WARNING: Network error on attempt {attempt} Retrying in {delay:.2f} seconds...")
                     print(f"WARNING: Error details: {type(exc).__name__}: {exc}")
@@ -93,7 +100,7 @@ class MusicBrainzClient:
                 if status == 503:  
                     print(f"WARN: MusicBrainz returned 503 (overloaded), retrying...")
                     print(f"WARN: Response text: {exc.response.text[:200]}")
-                    await asyncio.sleep(self.rate_limit.interval * 2)
+                    await asyncio.sleep(3.0)
                     continue
                     
                 if status == 429:  
@@ -122,7 +129,7 @@ class MusicBrainzClient:
     async def get_releases(self, release_group_id: str) -> dict:
         print(f"INFO: getting MusicBrainz releases for release-group id: {release_group_id}")
         params = {
-            "inc": "releases",
+            "inc": "releases+media",
             "fmt": "json"
         }
         return await self.request_with_retries(f"release-group/{release_group_id}", params)                 

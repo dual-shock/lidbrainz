@@ -11,7 +11,7 @@
   <Category>Tools: Status:Stable</Category>
   <WebUI>http://[IP]:[PORT:8080]/health</WebUI>
   <TemplateURL>false</TemplateURL>
-  <Icon>https://raw.githubusercontent.com/dual-shock/lidbrainz/refs/heads/main/lidbrainz-icon.png</Icon>
+  <Icon>https://raw.githubusercontent.com/dual-shock/lidbrainz/a0cd4ec74ef64b286dc1c3e744dc3e1364d899d1/interface/assets/icon.svg</Icon>
   <ExtraParams/>
   <PostArgs/>
   <CPUset/>
@@ -20,4 +20,7 @@
   <DonateLink/>
   <Requires/>
   <Config Name="WebUI Port" Target="8080" Default="22000" Mode="tcp" Description="Port of the web ui" Type="Port" Display="always" Required="true" Mask="false">22000</Config>
+  <Config Name="lidarr instance URL" Target="LIDARR_URL" Default="http://localhost:8686" Mode="" Description="url of your lidarr instance" Type="Variable" Display="always" Required="true" Mask="true"></Config>
+  <Config Name="lidarr instance API key" Target="LIDARR_APIKEY" Default="" Mode="" Description="API key for your lidarr instance" Type="Variable" Display="always" Required="true" Mask="true"></Config>
+  <Config Name="custom musicbrainz user agent" Target="MUSICBRAINZ_USERAGENT" Default="" Mode="" Description="User agent for your personal instance" Type="Variable" Display="always" Required="true" Mask="true"></Config>
 </Container>

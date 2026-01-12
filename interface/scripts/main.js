@@ -1,49 +1,360 @@
-// on each startup, change the input placeholder to a random track
+console.log("WHY ISNT THE UPDATES LOADING???")
 
+document.addEventListener('DOMContentLoaded', async () => {
+    console.log('DOM fully loaded, getting lidarr info');
+    await refreshLidarrInfo()
+});
 
-
-const input = document.getElementById('search-input');
-    const button = document.querySelector('button');
-    const resultsDiv = document.getElementById('results');
-    const sysInfoDiv = document.getElementById('system-info');
-
-    async function searchReleaseGroups(query) {
-        const params = new URLSearchParams({ query: query});
-        const response = await fetch(`/lidbrainz/search_musicbrainz/fully_search?${params}`);
-        if (!response.ok) {
-            const error = await response.json();
-            throw new Error(error.detail || 'Search failed');
-        }
-        return response.json();
-    }
-    async function fetchSystemInfo() {
+async function fetchLidarrInfo() {
         const response = await fetch(`/lidbrainz/add_to_lidarr/system_info`);
         if (!response.ok) {
             const error = await response.json();
             throw new Error(error.detail || 'Failed to fetch system info');
         }
         return response.json();
+}
+async function refreshLidarrInfo() {
+    try {
+        const lidarrInfo = await fetchLidarrInfo();
+        
+        await populateMetadataProfiles(lidarrInfo.metadata_profiles);
+        await populateQualityProfiles(lidarrInfo.quality_profiles);
+        console.log("FOLDER PROFILES:", lidarrInfo.root_folders)
+        await populateFolderProfiles(lidarrInfo.root_folders);
+    } catch (error) {
+        
     }
-    document.getElementById('fetch-system-info').addEventListener('click', async () => {
+}
+async function populateMetadataProfiles(profiles) {
+    const container = document.getElementById('metadata-profile-select');
+    container.innerHTML = ''; // Clear existing options
+    profiles.forEach(profile => {
+        console.log(profile.name, profile.id);
+        const metadataProfileElementId = `metadata-profile-${profile.id}`;
+        container.innerHTML += `
+            <input type="radio" id="${metadataProfileElementId}" name="metadata-profile" value="${profile.id}" ${profile.id === 1 ? 'checked' : ''}>
+            <label for="${metadataProfileElementId}">└─╲ ${profile.name}</label>
+        `;
+    });
+    container.addEventListener('change', (event) => {
+        const selectedMetadataProfileId = document.querySelector('#metadata-profile-select > input[type="radio"]:checked').value;
+        console.log(`Selected metadata profile ID is : ${selectedMetadataProfileId}`);
+    });
+}
+async function populateQualityProfiles(profiles) {
+    const container = document.getElementById('quality-profile-select');
+    container.innerHTML = ''; // Clear existing options
+    profiles.forEach(profile => {
+        console.log(profile.name, profile.id);
+        const qualityProfileElementId = `quality-profile-${profile.id}`;
+        container.innerHTML += `
+            <input type="radio" id="${qualityProfileElementId}" name="quality-profile" value="${profile.id}" ${profile.id === 1 ? 'checked' : ''}>
+            <label for="${qualityProfileElementId}">└─╲ ${profile.name}</label>
+        `;
+    });
+    container.addEventListener('change', (event) => {
+        const selectedQualityProfileId = document.querySelector('#quality-profile-select > input[type="radio"]:checked').value;
+        console.log(`Selected Quality profile ID is : ${selectedQualityProfileId}`);
+    });
+}
+async function populateFolderProfiles(profiles) {
+    const container = document.getElementById('folder-profile-select');
+    container.innerHTML = ''; // Clear existing options
+    profiles.forEach(profile => {
+        console.log(profile.name, profile.path);
+        const folderProfileElementId = `folder-profile-${profile.id}`;
+        container.innerHTML += `
+            <input type="radio" id="${folderProfileElementId}" name="folder-profile" value="${profile.path}" ${profile.id === 1 ? 'checked' : ''}>
+            <label for="${folderProfileElementId}">└─╲ ${profile.name}</label>
+        `;
+    });
+    container.addEventListener('change', (event) => {
+        const selectedFolderProfileId = document.querySelector('#folder-profile-select > input[type="radio"]:checked').value;
+        console.log(`Selected Folder profile ID is : ${selectedFolderProfileId}`);
+    });
+}
+
+function getSettings() {
+    const metadataProfileId = document.querySelector('#metadata-profile-select > input[type="radio"]:checked').value;
+    const qualityProfileId = document.querySelector('#quality-profile-select > input[type="radio"]:checked').value;
+    const folderPath = document.querySelector('#folder-profile-select > input[type="radio"]:checked').value;
+    const settings = {
+        metadataProfileId,
+        qualityProfileId,
+        folderPath
+    };
+    console.log("Current settings:", settings);
+    return settings
+}
+
+
+
+const searchCache = {};
+
+function checkScrollability() {
+  const container = document.getElementById("search-results-scrollable")
+
+  if (container.scrollHeight > container.clientHeight) {
+    container.classList.add('is-scrollable');
+  } else {
+    container.classList.remove('is-scrollable');
+  }
+}
+
+window.addEventListener('resize', checkScrollability);
+checkScrollability();
+
+
+
+
+
+
+const confirmSearchButton = document.getElementById('search-input-button');
+const searchInput = document.getElementById('search-input');
+
+async function searchReleaseGroups(query) {
+    const params = new URLSearchParams({ query: query});
+    const response = await fetch(`/lidbrainz/search_musicbrainz/fully_search?${params}`);
+    if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.detail || 'Search failed');
+    }
+    return response.json();
+}
+
+async function handleSearch() {
+    const query = searchInput.value.trim();
+    
+    if (!query) return;
+    
+    try {
+        
+        if (searchCache[query]) {
+            console.log(`Using cached results for: ${query}`);
+            processSearchResults(searchCache[query]);
+        } else {
+            console.log(`Searching for: ${query}`);
+            const results = await searchReleaseGroups(query);
+            
+            
+            searchCache[query] = results;
+            
+            processSearchResults(results);
+        }
+    } catch (error) {
+        console.error(`Search error: ${error.message}`);
+    }
+}
+
+
+async function handleAddReleaseGroup(releaseGroupId, artistId) {
+    console.log('Add release group:', releaseGroupId, artistId);
+
+    const settings = getSettings();
+    
+    const params = new URLSearchParams({
+        release_group_mbid: releaseGroupId, 
+        artist_mbid: artistId,
+        metadata_profile_id: settings.metadataProfileId,
+        quality_profile_id: settings.qualityProfileId,
+        root_folder_path: settings.folderPath
+    });
+    const response = await fetch(`/lidbrainz/add_to_lidarr/fully_add_release?${params}`);
+    if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.detail || 'failed to add release group');
+    }
+    const result = await response.json();
+    console.log(result)
+    return result; 
+}
+
+async function handleAddRelease(releaseGroupId, artistId, releaseId) {
+    console.log('Add release:', releaseGroupId, artistId, releaseId);
+    
+    const settings = getSettings();
+    
+    const params = new URLSearchParams({
+        release_group_mbid: releaseGroupId, 
+        artist_mbid: artistId,
+        release_mbid: releaseId,
+        metadata_profile_id: settings.metadataProfileId,
+        quality_profile_id: settings.qualityProfileId,
+        root_folder_path: settings.folderPath
+    });
+    const response = await fetch(`/lidbrainz/add_to_lidarr/fully_add_release?${params}`);
+    if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.detail || 'failed to add release');
+    }
+    const result = await response.json();
+    console.log(result)
+    return result; 
+}
+
+
+function getArtistNames(artistCredit) {
+    if (!artistCredit || !artistCredit.length) return 'N/A';
+    return artistCredit.map(ac => ac.name || 'N/A').join(', ');
+}
+function getArtistId(artistCredit){
+    if (!artistCredit || !artistCredit.length) return 'N/A';
+    return artistCredit[0].artist.id || 'N/A';
+}
+
+
+function getYear(dateStr) {
+    if (!dateStr) return 'N/A';
+    return dateStr.substring(0, 4);
+}
+
+
+function getCountryCode(release) {
+    try {
+        const code = release['release-events']?.[0]?.area?.['iso-3166-1-codes']?.[0];
+        if (!code) return null;
+        if (code === 'XW') return 'un';
+        if (code === 'XE') return 'eu';
+        return code.toLowerCase();
+    } catch { return null; }
+}
+
+
+function getTrackString(media) {
+    if (!media || !media.length) return 'N/A';
+    return media.map(m => m['track-count'] || 0).join('x');
+}
+
+
+function createReleaseElement(release, releaseGroupId, artistId) {
+    const title = release.title || 'N/A';
+    const format = release.media?.[0]?.format || 'N/A';
+    const tracks = getTrackString(release.media);
+    const status = release.status || 'N/A';
+    const countryCode = getCountryCode(release);
+    const countryDisplay = release['release-events']?.[0]?.area?.['iso-3166-1-codes']?.[0] || 'N/A';
+    const date = release['release-events']?.[0]?.date || release.date || 'N/A';
+    const releaseId = release.id;
+
+    const div = document.createElement('div');
+    div.className = 'release';
+    div.innerHTML = `
+        <div class="shrinkable">
+            <h4 class="text white releaseName">└─╲ ${title}&nbsp;</h4>
+            <h4 class="text default releaseFormat">[${format}]▷╲</h4>
+            <h4 class="text default releaseTracks">(${tracks}),&nbsp;</h4>
+            <h4 class="text default-secondary releaseStatus">${status}</h4>
+        </div>
+        <div class="non-shrinkable">
+            ${countryCode ? `<img src="https://flagcdn.com/${countryCode}.svg">` : `<img src="https://upload.wikimedia.org/wikipedia/commons/b/b0/No_flag.svg">`}
+            <h4 class="text white releaseCountry">${countryDisplay}&nbsp;¦</h4>
+            <h4 class="text white releaseYear">${date}</h4>
+            <h4 class="text green releaseAddButton">Add release</h4>
+        </div>
+    `;
+    
+    div.querySelector('.releaseAddButton').addEventListener('click', async () => {
+        let status
         try {
-            const systemInfo = await fetchSystemInfo();
-            document.getElementById('system-info-results').innerText = JSON.stringify(systemInfo, null, 2);
+            status = await handleAddRelease(releaseGroupId, artistId, releaseId);
         } catch (error) {
-            document.getElementById('system-info-results').innerText = `Error: ${error.message}`;
+            status = `Add release error: ${error.message}`;
         }
+        console.log(status)
     });
-    button.addEventListener('click', async (event) => {
-        event.preventDefault();
-        const query = input.value.trim();
-        if (query) {
-            try {
-                const data = await searchReleaseGroups(query);
-                resultsDiv.innerText = JSON.stringify(data, null, 2);
-            } catch (error) {
-                resultsDiv.innerText = `Error: ${error.message}`;
-            }
+    return div;
+}
+
+
+function createReleaseGroupElement(releaseGroup, releases = null) {
+    const artist = getArtistNames(releaseGroup['artist-credit']);
+    const title = releaseGroup.title || 'N/A';
+    const year = getYear(releaseGroup['first-release-date']);
+    const type = releaseGroup['primary-type'] || 'N/A';
+    const score = releaseGroup.score ?? 'N/A';
+    const releaseGroupId = releaseGroup.id;
+    const artistId = getArtistId(releaseGroup['artist-credit']); 
+
+    const div = document.createElement('div');
+    div.className = 'results-box release-group-result';
+
+    let html = `
+        <div class="release-group-header">
+            <div class="shrinkable">
+                <h3 class="text white-tertiary releaseGrpArtist">${artist} -&nbsp;</h3>
+                <h3 class="text white releaseGrpName">${title} (${year})&nbsp;</h3>
+                <h3 class="text white-tertiary releaseGrpType">[${type}] &nbsp;</h3>
+            </div>
+            <div class="non-shrinkable">
+                <h3 class="text default matchScore">Match%: ${score}</h3>
+                <button class="text default addButton" type="button">Add</button>
+            </div>
+        </div>
+    `;
+
+    if (releases && releases.length) {
+        html += `<hr><div class="release-group-releases"></div>`;
+    }
+
+    div.innerHTML = html;
+    div.querySelector('.addButton').addEventListener('click', async () => {
+        let status;
+        try {
+            status = await handleAddReleaseGroup(releaseGroupId, artistId)
+        } catch (error) {
+            status = `Add release group error: ${error.message}`;
         }
+        console.log(status)
     });
+
+    if (releases && releases.length) {
+        const releasesContainer = div.querySelector('.release-group-releases');
+        releases.forEach(r => releasesContainer.appendChild(createReleaseElement(r,releaseGroupId,artistId)));
+    }
+
+    return div;
+}
+
+
+function processSearchResults(results) {
+    const container = document.getElementById('search-results-scrollable');
+    container.innerHTML = ''; 
+
+    const releaseGroups = results['release-groups'] || [];
+    const bestMatchReleases = results['best-match-releases'] || [];
+
+    releaseGroups.forEach((rg, index) => {
+
+        const releases = index === 0 ? bestMatchReleases : null;
+        container.appendChild(createReleaseGroupElement(rg, releases));
+    });
+
+    checkScrollability();
+}
+
+confirmSearchButton.addEventListener('click', handleSearch);
+searchInput.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') handleSearch();
+});
+
+
+
+
+// const input = document.getElementById('search-input');
+//     const button = document.querySelector('button');
+//     const resultsDiv = document.getElementById('results');
+//     const sysInfoDiv = document.getElementById('system-info');
+
+//     async function searchReleaseGroups(query) {
+//         const params = new URLSearchParams({ query: query});
+//         const response = await fetch(`/lidbrainz/search_musicbrainz/fully_search?${params}`);
+//         if (!response.ok) {
+//             const error = await response.json();
+//             throw new Error(error.detail || 'Search failed');
+//         }
+//         return response.json();
+//     }
+
 
 
 

@@ -10,3 +10,10 @@ docker-compose.yml
 
 .vscode/
 test/
+
+.git/
+
+
+test/
+TODO.md
+README.md
