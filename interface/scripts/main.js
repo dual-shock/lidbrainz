@@ -61,11 +61,12 @@ async function populateQualityProfiles(profiles) {
 async function populateFolderProfiles(profiles) {
     const container = document.getElementById('folder-profile-select');
     container.innerHTML = ''; // Clear existing options
+    const firstProfileId = profiles[0].id;
     profiles.forEach(profile => {
         console.log(profile.name, profile.path);
         const folderProfileElementId = `folder-profile-${profile.id}`;
         container.innerHTML += `
-            <input type="radio" id="${folderProfileElementId}" name="folder-profile" value="${profile.path}" ${profile.id === 1 ? 'checked' : ''}>
+            <input type="radio" id="${folderProfileElementId}" name="folder-profile" value="${profile.path}" ${profile.id === firstProfileId ? 'checked' : ''}>
             <label for="${folderProfileElementId}">└─╲ ${profile.name}</label>
         `;
     });
