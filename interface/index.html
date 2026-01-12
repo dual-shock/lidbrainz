@@ -45,23 +45,46 @@
                 </div>
             </div> -->
         </div>
-
         <div id="middle-content">
+
+
+
+
+
             <div id="search-section">
+
                 <div class="input-box">
-                    <input type="text" id="search-input" name="search-input" class="text default" placeholder="ArtistName - ReleaseTitle">
+                    <div id="release-input-cursor-holder" class="text default search-input-cursor-holder">
+                        <input type="text" id="release-search-input" class="text default search-input" name="release-search-input" placeholder="ReleaseTitle*">
+                    </div>
+                    <div class="text default search-input-cursor-holder" >
+                        <input type="text" id="artist-search-input" class="text default search-input" name="artist-search-input" placeholder="ArtistName (opt.)">
+                    </div>
+                        
+
                     <button type="button" id="search-input-button">Search</button>
+                    
                 </div>
+
             </div>
+
+
+
+
+
+
+
+
+
 
             <div id="results-section">
 
-                <!-- <div class="results-box example">
+                <div class="results-box example">
                     <h3 class="text white-tertiary releaseGrpArtist">░ artistName ░&nbsp;</h3>
                     <h3 class="text white releaseGrpName">░ releaseGroup ░&nbsp;</h3>
                     <h3 class="text white-tertiary releaseGrpType">░ releaseType ░&nbsp;</h3>
                     <h3 class="text default matchScore">░ matchScore ░&nbsp;</h3>
-                </div> -->
+                </div>
                 <!-- Search results will appear here -->
                 <div class="scrollable" id="search-results-scrollable">
                     <!-- <div class="results-box release-group-result">

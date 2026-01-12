@@ -1,9 +1,9 @@
-console.log("WHY ISNT THE UPDATES LOADING???")
-
 document.addEventListener('DOMContentLoaded', async () => {
     console.log('DOM fully loaded, getting lidarr info');
     await refreshLidarrInfo()
 });
+const searchCache = {};
+
 
 async function fetchLidarrInfo() {
         const response = await fetch(`/lidbrainz/add_to_lidarr/system_info`);
@@ -73,7 +73,6 @@ async function populateFolderProfiles(profiles) {
         console.log(`Selected Folder profile ID is : ${selectedFolderProfileId}`);
     });
 }
-
 function getSettings() {
     const metadataProfileId = document.querySelector('#metadata-profile-select > input[type="radio"]:checked').value;
     const qualityProfileId = document.querySelector('#quality-profile-select > input[type="radio"]:checked').value;
@@ -89,8 +88,6 @@ function getSettings() {
 
 
 
-const searchCache = {};
-
 function checkScrollability() {
   const container = document.getElementById("search-results-scrollable")
 
@@ -100,20 +97,24 @@ function checkScrollability() {
     container.classList.remove('is-scrollable');
   }
 }
-
 window.addEventListener('resize', checkScrollability);
 checkScrollability();
 
 
 
-
+// if artist: 
+//     query = f"releasegroup:{query} AND artist:{artist}"
+//     print(f"INFO: artist included in query with artist: {query}")
 
 
 const confirmSearchButton = document.getElementById('search-input-button');
-const searchInput = document.getElementById('search-input');
+const releaseSearchInput = document.getElementById('release-search-input');
+const artistSearchInput = document.getElementById('artist-search-input');
 
 async function searchReleaseGroups(query) {
-    const params = new URLSearchParams({ query: query});
+    const params = new URLSearchParams({ 
+        query: query
+    });
     const response = await fetch(`/lidbrainz/search_musicbrainz/fully_search?${params}`);
     if (!response.ok) {
         const error = await response.json();
@@ -123,7 +124,15 @@ async function searchReleaseGroups(query) {
 }
 
 async function handleSearch() {
-    const query = searchInput.value.trim();
+    const release = releaseSearchInput.value.trim();
+    let artist = artistSearchInput.value.trim();
+    if(artist.toLowerCase() == "va"){
+        artist = "Various Artists"
+    }
+
+    const query = artist ? `releasegroup:${release} AND artist:${artist}` : release;
+
+    console.log("Final search query:", query);
     
     if (!query) return;
     
@@ -146,6 +155,28 @@ async function handleSearch() {
     }
 }
 
+confirmSearchButton.addEventListener('click', handleSearch);
+releaseSearchInput.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') handleSearch();
+});
+
+
+
+function processSearchResults(results) {
+    const container = document.getElementById('search-results-scrollable');
+    container.innerHTML = ''; 
+
+    const releaseGroups = results['release-groups'] || [];
+    const bestMatchReleases = results['best-match-releases'] || [];
+
+    releaseGroups.forEach((rg, index) => {
+
+        const releases = index === 0 ? bestMatchReleases : null;
+        container.appendChild(createReleaseGroupElement(rg, releases));
+    });
+
+    checkScrollability();
+}
 
 async function handleAddReleaseGroup(releaseGroupId, artistId) {
     console.log('Add release group:', releaseGroupId, artistId);
@@ -168,7 +199,6 @@ async function handleAddReleaseGroup(releaseGroupId, artistId) {
     console.log(result)
     return result; 
 }
-
 async function handleAddRelease(releaseGroupId, artistId, releaseId) {
     console.log('Add release:', releaseGroupId, artistId, releaseId);
     
@@ -191,8 +221,6 @@ async function handleAddRelease(releaseGroupId, artistId, releaseId) {
     console.log(result)
     return result; 
 }
-
-
 function getArtistNames(artistCredit) {
     if (!artistCredit || !artistCredit.length) return 'N/A';
     return artistCredit.map(ac => ac.name || 'N/A').join(', ');
@@ -201,14 +229,10 @@ function getArtistId(artistCredit){
     if (!artistCredit || !artistCredit.length) return 'N/A';
     return artistCredit[0].artist.id || 'N/A';
 }
-
-
 function getYear(dateStr) {
     if (!dateStr) return 'N/A';
     return dateStr.substring(0, 4);
 }
-
-
 function getCountryCode(release) {
     try {
         const code = release['release-events']?.[0]?.area?.['iso-3166-1-codes']?.[0];
@@ -218,14 +242,10 @@ function getCountryCode(release) {
         return code.toLowerCase();
     } catch { return null; }
 }
-
-
 function getTrackString(media) {
     if (!media || !media.length) return 'N/A';
     return media.map(m => m['track-count'] || 0).join('x');
 }
-
-
 function createReleaseElement(release, releaseGroupId, artistId) {
     const title = release.title || 'N/A';
     const format = release.media?.[0]?.format || 'N/A';
@@ -264,8 +284,6 @@ function createReleaseElement(release, releaseGroupId, artistId) {
     });
     return div;
 }
-
-
 function createReleaseGroupElement(releaseGroup, releases = null) {
     const artist = getArtistNames(releaseGroup['artist-credit']);
     const title = releaseGroup.title || 'N/A';
@@ -316,44 +334,8 @@ function createReleaseGroupElement(releaseGroup, releases = null) {
 }
 
 
-function processSearchResults(results) {
-    const container = document.getElementById('search-results-scrollable');
-    container.innerHTML = ''; 
-
-    const releaseGroups = results['release-groups'] || [];
-    const bestMatchReleases = results['best-match-releases'] || [];
-
-    releaseGroups.forEach((rg, index) => {
-
-        const releases = index === 0 ? bestMatchReleases : null;
-        container.appendChild(createReleaseGroupElement(rg, releases));
-    });
-
-    checkScrollability();
-}
-
-confirmSearchButton.addEventListener('click', handleSearch);
-searchInput.addEventListener('keypress', (e) => {
-    if (e.key === 'Enter') handleSearch();
-});
 
 
-
-
-// const input = document.getElementById('search-input');
-//     const button = document.querySelector('button');
-//     const resultsDiv = document.getElementById('results');
-//     const sysInfoDiv = document.getElementById('system-info');
-
-//     async function searchReleaseGroups(query) {
-//         const params = new URLSearchParams({ query: query});
-//         const response = await fetch(`/lidbrainz/search_musicbrainz/fully_search?${params}`);
-//         if (!response.ok) {
-//             const error = await response.json();
-//             throw new Error(error.detail || 'Search failed');
-//         }
-//         return response.json();
-//     }
 
 
 

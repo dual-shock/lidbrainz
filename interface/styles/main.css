@@ -59,17 +59,32 @@ body {
         0 0 10px var(--main-glow-text),
         inset 0 0 5px var(--main-glow-text); 
 }
+
+
+
+
+
 .input-box{
     background-color: var(--background-color-light);
     border: 1px solid var(--main-text);
     padding: 10px;
-    position: relative;
+    display: flex;
+    flex-direction: row;
 }
-.input-box::before {
+
+
+
+
+@keyframes blink {
+    0%, 50% { visibility: visible; }
+    51%, 100% { visibility: hidden; }
+}
+
+.search-input-cursor-holder::before {
     content: "▇";
     position: absolute;
-    left: 21px;
-    top: 23px;
+    left: 11px;
+    top: calc(50% - 0.47em);
     color: var(--main-muted-text);
     font-family: var(--font-family);
     font-size: 0.85em;
@@ -77,15 +92,17 @@ body {
     pointer-events: none;
     z-index: 1;
 }
-.input-box:has(input:focus)::before {
+.search-input-cursor-holder:has(input:focus)::before {
     animation: blink 1s step-end infinite;
     color: var(--main-text);
 }
-@keyframes blink {
-    0%, 50% { visibility: visible; }
-    51%, 100% { visibility: hidden; }
+.search-input-cursor-holder{
+    width:fit-content;
+    position: relative;
 }
-.input-box input[type="text"]{
+
+
+.search-input{
     background-color: var(--background-color-input);
     border: 1px solid var(--main-muted-text);
     padding: 10px;
@@ -95,13 +112,23 @@ body {
     font-family: var(--font-family);
     font-size: 1em;
 }
-.input-box input[type="text"]::placeholder{
+.search-input::placeholder{
     color: var(--main-muted-text);
 }
-.input-box input[type="text"]:focus{
+.search-input:focus{
     border: 1px solid var(--main-text);
 }
-.input-box button{
+
+.search-input-cursor-holder:has(#artist-search-input){
+    margin-left: 10px;
+}
+
+#artist-search-input{
+
+}
+
+
+#search-input-button{
     background-color: var(--background-color-decor);
     border: 1px solid var(--main-text);
     padding: 10px;
@@ -110,14 +137,30 @@ body {
     font-family: var(--font-family);
     font-size: 1em;
     cursor: pointer;
+    margin-left:auto;
 }
-.input-box button:hover{
+#search-input-button:hover,
+#search-input-button:focus-visible{
+    border: 1px solid var(--main-text);
+    outline: none;
     background-color: var(--main-hover-text);
     color: var(--background-color);
 }
-.input-box button:active{
+#search-input-button:active
+{
     transform: scale(0.98);
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 .results-box{
