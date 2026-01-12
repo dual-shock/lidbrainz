@@ -44,11 +44,12 @@ async function populateMetadataProfiles(profiles) {
 async function populateQualityProfiles(profiles) {
     const container = document.getElementById('quality-profile-select');
     container.innerHTML = ''; // Clear existing options
+    const firstProfileId = profiles[0].id;
     profiles.forEach(profile => {
         console.log(profile.name, profile.id);
         const qualityProfileElementId = `quality-profile-${profile.id}`;
         container.innerHTML += `
-            <input type="radio" id="${qualityProfileElementId}" name="quality-profile" value="${profile.id}" ${profile.id === 1 ? 'checked' : ''}>
+            <input type="radio" id="${qualityProfileElementId}" name="quality-profile" value="${profile.id}" ${profile.id === firstProfileId ? 'checked' : ''}>
             <label for="${qualityProfileElementId}">└─╲ ${profile.name}</label>
         `;
     });
@@ -60,11 +61,12 @@ async function populateQualityProfiles(profiles) {
 async function populateFolderProfiles(profiles) {
     const container = document.getElementById('folder-profile-select');
     container.innerHTML = ''; // Clear existing options
+    const firstProfileId = profiles[0].id;
     profiles.forEach(profile => {
         console.log(profile.name, profile.path);
         const folderProfileElementId = `folder-profile-${profile.id}`;
         container.innerHTML += `
-            <input type="radio" id="${folderProfileElementId}" name="folder-profile" value="${profile.path}" ${profile.id === 1 ? 'checked' : ''}>
+            <input type="radio" id="${folderProfileElementId}" name="folder-profile" value="${profile.path}" ${profile.id === firstProfileId ? 'checked' : ''}>
             <label for="${folderProfileElementId}">└─╲ ${profile.name}</label>
         `;
     });
