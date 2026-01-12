@@ -38,7 +38,7 @@ this might not be for you
 if you wish to use unraids built in ui and handling (like pulling updates) you can manually add
 the example xml template to your /boot/config/plugins/dockerMan/template-user/ folder
 1. copy `my-lidbrainz.example.xml` to your `my-lidbrainz.xml`
-2. move `my-lidbrainz.xml` to `/boot/config/plugins/dockerMan/template-user/`
+2. move `my-lidbrainz.xml` to `/boot/config/plugins/dockerMan/templates-user/`
 3. in the docker tab on unraid, click "add container"
 4. the lidbrainz template should show up in the template dropdown, select it
 5. fill in the required values
