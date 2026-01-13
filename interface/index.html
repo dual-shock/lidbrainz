@@ -8,13 +8,8 @@
     <!-- THANK YOU OLIVIA !!! ^^ -->
 <link rel="stylesheet" href="styles/main.css">
 </head>
-<body>   <div class="background-layer"></div>
-
-
-
-
-
-<div id="main-container">
+<body >   <div class="background-layer" ></div>
+<div id="main-container" class="crt">
     <div id="header">
         <div id="logo" style="visibility:hidden;">
             <img class="glow default" src="assets/icon.svg" alt="LidBrainz Logo" height="64px">
@@ -36,14 +31,15 @@
     </div>
     <div id="main-content">
         <div id="left-sidebar">
-            <!-- <h3 class="text default">Event Log</h3>
-            <div id="event-log">
-
-                <div class="event-item">
-                    <span class="event-time">12:00:00</span>
-                    <span class="event-message">Example event message</span>
+            <div id="lidbrainz-connection">
+                <div id="lidbrainz-event-log">
+                    <h3 class="text default">░ ▒ ▓ event log ▓ ▒ ░</h3> 
+                    <hr>
+                    <div class="scrollable" id="logs-scrollable">
+                        <!-- Event log entries will appear here -->
+                    </div>
                 </div>
-            </div> -->
+            </div>
         </div>
         <div id="middle-content">
 
@@ -150,7 +146,7 @@
             </div>
         </div>
 
-        <div id="right-sidebar">
+        <div id="right-sidebar" >
             <div class="settings-box" id="metadata-settings">
                 <h3 class="text default">░ ▒ ▓ metadata profile ▓ ▒ ░</h3>
                 <hr>
@@ -176,6 +172,19 @@
                     <div id="folder-profile-select" class="text default">
                     
                     </div>
+                </div>
+            </div>
+            <div class="settings-box" id="download-settings">
+                <div id="download-settings-select" class="text default">
+                    
+                    <label id="download-settings-label" for="auto-download-checkbox"  class="white">
+                        <div id="auto-download-checkbox-container" class="custom-checkbox" >
+                            <input id="auto-download-checkbox" type="checkbox" class="white"  name="auto-download-checkbox">
+                            <div id="download-settings-label-text" class="label-text">auto-download</div>
+                        </div>
+                        <div id="download-checkbox-connector" class="connector-line white">└──────┘</div>
+                    </label>
+                    
                 </div>
             </div>
             <!-- <div id="connectivity-section">

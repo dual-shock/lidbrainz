@@ -9,7 +9,7 @@
   <Project>https://github.com/dual-shock/lidbrainz</Project>
   <Overview>search bar for musicbrainz to send to lidarr</Overview>
   <Category>Tools: Status:Stable</Category>
-  <WebUI>http://[IP]:[PORT:8080]/health</WebUI>
+  <WebUI>http://[IP]:[PORT:8080]</WebUI>
   <TemplateURL>false</TemplateURL>
   <Icon>https://raw.githubusercontent.com/dual-shock/lidbrainz/refs/heads/main/interface/assets/icon.png</Icon>
   <ExtraParams/>

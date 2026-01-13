@@ -2,6 +2,7 @@ from src.config import Config
 from src.api.app import start
 import uvicorn 
 import asyncio
+from src.logger import logger
 
 
 def main():
@@ -20,6 +21,7 @@ def main():
     )
     server = uvicorn.Server(config)
     server.run()
+    
 
 
 if __name__ == "__main__":

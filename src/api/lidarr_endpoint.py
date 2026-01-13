@@ -2,6 +2,7 @@ import httpx
 import asyncio
 import traceback
 from src.config import Config
+from src.logger import logger
 
 #? You test this whole program by running "python -m src.api.lidarr_endpoint"
 #? you search, and then pick a release group id to add to lidarr
@@ -26,6 +27,7 @@ class LidarrClient:
         self.client: httpx.AsyncClient | None = None
     
     async def get_client(self) -> httpx.AsyncClient:
+        logger.info("getting lidarr httpx AsyncClient", extra={"frontend": True})
         if not self.client or self.client.is_closed:
             print("INFO: Lidarr httpx AsyncClient is None or closed, creating new one")
 
@@ -56,6 +58,7 @@ class LidarrClient:
             self.client = None
         
     async def get_system_info(self) -> dict:
+        logger.info("fetching system info from lidarr", extra={"frontend": True})
         try: 
             print("INFO: fetching system info from Lidarr")
             client = await self.get_client()
@@ -87,7 +90,8 @@ class LidarrClient:
             system_info = {
                 "root_folders": root_folders.json(),
                 "quality_profiles": quality_profiles.json(),
-                "metadata_profiles": metadata_profiles.json()
+                "metadata_profiles": metadata_profiles.json(),
+                "lidarr_url": Config.LIDARR_URL
             }
             return system_info
         except Exception as e:
@@ -98,6 +102,7 @@ class LidarrClient:
     #! #################################################################
     #! this SHOULDNT have to be used, in theory, so not made yet
     async def lookup_release_info(self,release_group_mbid: str) -> dict:
+        logger.info("looking up release info from lidarr", extra={"frontend": True})
         try: 
             client = await self.get_client()
             lookup = await client.get(
@@ -115,6 +120,7 @@ class LidarrClient:
     #! #################################################################
     
     async def check_artist_in_library(self, artist_mbid: str) -> dict:
+        logger.info("checking artist in lidarr library", extra={"frontend": True})
         try:
             print(f"INFO: checking if artist with mbid: {artist_mbid} exists in Lidarr library")
             client = await self.get_client()
@@ -142,6 +148,7 @@ class LidarrClient:
         metadata_profile_id: int = 1,
         monitored: bool | None = None
     ) -> dict:
+        logger.info("adding artist to lidarr library", extra={"frontend": True})
         try:
             print(f"INFO: adding artist to Lidarr library with mbid: {artist_mbid}")
             client = await self.get_client()
@@ -179,6 +186,7 @@ class LidarrClient:
 
 
     async def check_release_group_in_library(self, release_group_mbid: str) -> dict:
+        logger.info("checking release group in lidarr library", extra={"frontend": True})
         try: 
             print(f"INFO: checking if release group with mbid: {release_group_mbid} exists in Lidarr library")
             client = await self.get_client()
@@ -200,6 +208,7 @@ class LidarrClient:
     #! #################################################################
     #! this SHOULDNT have to be used, in theory, so not made yet    
     async def add_release_group_to_library(self,) -> dict:
+        logger.info("adding release group to lidarr library - FUNCTION NOT IMPLEMENTED YET", extra={"frontend": True})
         try: 
             client = await self.get_client()
             
@@ -212,6 +221,7 @@ class LidarrClient:
     #! #################################################################
 
     async def set_monitor_release_group(self, release_group_lrid: int, monitored: bool = True) -> dict:
+        logger.info("setting monitor for release group in lidarr", extra={"frontend": True})
         try: 
             print(f"INFO: setting monitor={monitored} for release group in Lidarr with id: {release_group_lrid}")
             client = await self.get_client()
@@ -233,6 +243,7 @@ class LidarrClient:
             return {}
         
     async def set_release_in_release_group(self, release_group_data: dict, release_mbid: str) -> dict:
+        logger.info("setting specific release in release group in lidarr", extra={"frontend": True})
         # release_group_data here is expected to be a return of get/album on lidarr api
         # id make an object for all this, cba
         try:
@@ -258,6 +269,7 @@ class LidarrClient:
             return {}
 
     async def trigger_search_for_release_group(self, release_group_lrid: int) -> dict:
+        logger.info("triggering search for release group in lidarr", extra={"frontend": True})
         try:
             print(f"INFO: triggering search for release group in Lidarr with id: {release_group_lrid}")
             client = await self.get_client()
@@ -284,8 +296,8 @@ class LidarrClient:
     #! currently unused cause it doesnt work, the auto post-grab not respected
    
     async def refresh_release_group_metadata(self, release_group_lrid: int, max_wait: float = 30.0, poll_interval: float = 0.3) -> dict:
+        logger.info("triggering release-group metadata refresh to affirm metadata presence before triggering download", extra={"frontend": True})
         try:
-            print(f"INFO: triggering release-group metadata refresh to affirm metadata presence before triggering download")
             client = await self.get_client()
             payload = {
                 "name": "RefreshAlbum",
@@ -339,6 +351,7 @@ class LidarrClient:
     #! #################################################################
 
     async def refresh_artist_metadata(self, artist_lrid: int, max_wait: float = 30.0, poll_interval: float = 0.3) -> dict:
+        logger.info("triggering artist metadata refresh to affirm metadata presence before triggering download", extra={"frontend": True})
         try:
             print(f"INFO: triggering artist metadata refresh to affirm metadata presence before triggering download")
             client = await self.get_client()
@@ -403,6 +416,7 @@ class LidarrClient:
         release_mbid: str | None = None, #optional, if specified it gets picked if not its default
         monitor_artist: bool = True, #optional, if specified it sets the artist to monitored
     ) -> dict:
+        logger.info("fully adding release to lidarr", extra={"frontend": True})
         try:
             print("INFO: starting full add of release to Lidarr")
 
@@ -445,6 +459,13 @@ class LidarrClient:
             release_group = await self.check_release_group_in_library(release_group_mbid)
 
             if not release_group:
+                logger.error(
+f"""ERROR: release group with mbid: {release_group_mbid} still not found in Lidarr
+library after artist add and metadata refresh, this is likely because 
+YOUR METADATA PROFILE BLOCKS THIS RELEASE / DOESNT FIND IT. 
+Either try a less strict metadata profile or add release manually.""", 
+                    extra={"frontend": True}
+                )
                 print(
 f"""ERROR: release group with mbid: {release_group_mbid} still not found in Lidarr
 library after artist add and metadata refresh, this is likely because 
@@ -474,9 +495,7 @@ Either try a less strict metadata profile or add release manually."""
 
             if auto_download:
                 print(f"INFO: Auto download is true")
-                print(f"DEBUG: artist is {artist}")
-                print(f"DEBUG: artist lrid is {artist['id']}")
-                
+
 
                 await self.refresh_artist_metadata(
                     artist_lrid=artist["id"]

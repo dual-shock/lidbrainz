@@ -292,7 +292,11 @@
     --white-text: #D2C1B9;
     --white-secondary-text: #928781;
     --white-tertiary-text: #9F8876;
-    --white-glow-text: rgba(228, 216, 211, 0.504)
+    --white-glow-text: rgba(228, 216, 211, 0.504);
 
+
+    --crt-red: rgba(218, 49, 49);
+    --crt-green: rgb(112, 159, 115);
+    --crt-blue: rgb(40, 129, 206);
 }
 

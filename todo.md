@@ -6,3 +6,5 @@ specific releases as monitored, just send it all with the artist payload (if art
 - add functionality for advanced searching like specifying artist and 
 
 - remove unused python libs, like colorama from the livi thing
+
+- add hyperlink to release group names (this is recieved from musicbrainz payload)

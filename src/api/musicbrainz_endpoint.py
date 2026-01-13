@@ -3,6 +3,7 @@ import time
 import httpx
 from collections import deque
 from src.config import Config
+from src.logger import logger
 
 class RateLimit:
     max_requests = 4
@@ -21,6 +22,7 @@ class RateLimit:
             
             if time_since_oldest < self.time_window:
                 wait_time = self.time_window - time_since_oldest
+                logger.warning(f"rate limit hit on musicbrainz requests", extra={"frontend": True})
                 print(f"INFO: waiting {wait_time:.2f}s to respect musicbrainz rate limit (4 req/5s)...")
                 await asyncio.sleep(wait_time)
                 curr_time = time.monotonic()
@@ -32,11 +34,12 @@ class MusicBrainzClient:
     rate_limit = RateLimit()
 
     def __init__(self):
+        
         print("INFO: initializing httpx AsyncClient for MusicBrainz")
         self.client: httpx.AsyncClient | None = None
     
     async def get_client(self) -> httpx.AsyncClient:
-
+        logger.info("getting MusicBrainz httpx AsyncClient", extra={"frontend": True})
         if not self.client or self.client.is_closed:
             print("INFO: Musicbrainz httpx AsyncClient is None or closed, creating new one")
             print(f"INFO: user agent is {Config.MUSICBRAINZ_USERAGENT}")
@@ -73,6 +76,7 @@ class MusicBrainzClient:
             self.client = None
 
     async def request_with_retries(self, endpoint: str, params: dict, retry: bool = True) -> dict: #TODO turning retry on and off to be implemented
+        logger.info(f"requesting MusicBrainz endpoint", extra={"frontend": True})
         attempt = 0
         print(f"INFO: requesting MusicBrainz endpoint {endpoint} with params {params}")
         while attempt < self.RETRIES:
@@ -135,6 +139,7 @@ class MusicBrainzClient:
         return await self.request_with_retries(f"release-group/{release_group_id}", params)                 
     
     async def fully_search(self, query: str, limit: int = 5) -> dict:
+        logger.info(f"performing fully_search on MusicBrainz", extra={"frontend": True})
         print(f"INFO: performing fully_search on MusicBrainz with query: {query}")
         params = {
             "query": query,

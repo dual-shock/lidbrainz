@@ -1,6 +1,32 @@
+
 document.addEventListener('DOMContentLoaded', async () => {
     console.log('DOM fully loaded, getting lidarr info');
-    await refreshLidarrInfo()
+    const lidarrUrl = await refreshLidarrInfo();
+    const lidbrainzEventLog = document.getElementById('logs-scrollable');
+    const lidbrainzEventSource = new EventSource('/lidbrainz/interface_logs/interface_logs');
+    lidbrainzEventSource.onmessage = async function(event) {
+        const data = JSON.parse(event.data);
+        console.log("Lidbrainz Event:", data);
+
+        if (data.event_content.toLowerCase().includes("lidarr")){
+            const lidarrLink = `<a href="${lidarrUrl}" target="_blank" rel="noopener noreferrer">Lidarr</a>`;
+            data.event_content = data.event_content.replace(/lidarr/gi, lidarrLink);
+        }
+
+        const eventItem = document.createElement('div');
+        eventItem.className = 'event-item';
+        eventItem.innerHTML = `
+            <div class="first-row">
+                <h5 class="text white event-time">[${data.event_time}]</h5>
+                <h5 class="text default event-type">${data.event_type}</h5>
+            </div>
+            <div class="second-row">
+                <h4 class="text event-content-indent">└─╲</h5> 
+                <h5 class="text default-secondary event-content">${data.event_content}</h5>
+            </div>
+        `;
+        lidbrainzEventLog.prepend(eventItem);
+    }
 });
 const searchCache = {};
 
@@ -16,11 +42,11 @@ async function fetchLidarrInfo() {
 async function refreshLidarrInfo() {
     try {
         const lidarrInfo = await fetchLidarrInfo();
-        
         await populateMetadataProfiles(lidarrInfo.metadata_profiles);
         await populateQualityProfiles(lidarrInfo.quality_profiles);
         console.log("FOLDER PROFILES:", lidarrInfo.root_folders)
         await populateFolderProfiles(lidarrInfo.root_folders);
+        return lidarrInfo.lidarr_url;
     } catch (error) {
         
     }
@@ -79,10 +105,12 @@ function getSettings() {
     const metadataProfileId = document.querySelector('#metadata-profile-select > input[type="radio"]:checked').value;
     const qualityProfileId = document.querySelector('#quality-profile-select > input[type="radio"]:checked').value;
     const folderPath = document.querySelector('#folder-profile-select > input[type="radio"]:checked').value;
+    const autoDownload = document.getElementById('auto-download-checkbox').checked;
     const settings = {
         metadataProfileId,
         qualityProfileId,
-        folderPath
+        folderPath,
+        autoDownload
     };
     console.log("Current settings:", settings);
     return settings
@@ -91,13 +119,20 @@ function getSettings() {
 
 
 function checkScrollability() {
-  const container = document.getElementById("search-results-scrollable")
+    const resultsContainer = document.getElementById("search-results-scrollable")
+    const logsContainer = document.getElementById("logs-scrollable")
 
-  if (container.scrollHeight > container.clientHeight) {
-    container.classList.add('is-scrollable');
-  } else {
-    container.classList.remove('is-scrollable');
-  }
+    if (resultsContainer.scrollHeight > resultsContainer.clientHeight) {
+    resultsContainer.classList.add('is-scrollable');
+    } else {
+    resultsContainer.classList.remove('is-scrollable');
+    }
+
+    if (logsContainer.scrollHeight > logsContainer.clientHeight) {
+    logsContainer.classList.add('is-scrollable');
+    } else {
+    logsContainer.classList.remove('is-scrollable');
+    }
 }
 window.addEventListener('resize', checkScrollability);
 checkScrollability();
@@ -190,7 +225,8 @@ async function handleAddReleaseGroup(releaseGroupId, artistId) {
         artist_mbid: artistId,
         metadata_profile_id: settings.metadataProfileId,
         quality_profile_id: settings.qualityProfileId,
-        root_folder_path: settings.folderPath
+        root_folder_path: settings.folderPath,
+        auto_download: settings.autoDownload
     });
     const response = await fetch(`/lidbrainz/add_to_lidarr/fully_add_release?${params}`);
     if (!response.ok) {
@@ -212,7 +248,8 @@ async function handleAddRelease(releaseGroupId, artistId, releaseId) {
         release_mbid: releaseId,
         metadata_profile_id: settings.metadataProfileId,
         quality_profile_id: settings.qualityProfileId,
-        root_folder_path: settings.folderPath
+        root_folder_path: settings.folderPath,
+        auto_download: settings.autoDownload
     });
     const response = await fetch(`/lidbrainz/add_to_lidarr/fully_add_release?${params}`);
     if (!response.ok) {
