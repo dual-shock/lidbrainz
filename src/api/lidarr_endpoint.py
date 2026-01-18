@@ -23,13 +23,13 @@ TEST_SEARCH : bool = False
 class LidarrClient:
 
     def __init__(self):
-        print("INFO: initializing httpx AsyncClient for Lidarr")
+
         self.client: httpx.AsyncClient | None = None
     
     async def get_client(self) -> httpx.AsyncClient:
         logger.info("getting lidarr httpx AsyncClient", extra={"frontend": True})
         if not self.client or self.client.is_closed:
-            print("INFO: Lidarr httpx AsyncClient is None or closed, creating new one")
+
 
             if not Config.LIDARR_URL or not Config.LIDARR_APIKEY:
                 raise ValueError("LIDARR_URL or LIDARR_APIKEY is not configured")
@@ -43,13 +43,13 @@ class LidarrClient:
                 timeout=30.0,
                 http2=True 
             )
-            print("INFO: created new httpx AsyncClient for Lidarr")
+
 
         return self.client
     
 
     async def close_client(self) -> None:
-        print("INFO: closing Lidarr httpx AsyncClient")
+
         if self.client is not None:
             try:
                 await self.client.aclose()
@@ -60,7 +60,7 @@ class LidarrClient:
     async def get_system_info(self) -> dict:
         logger.info("fetching system info from lidarr", extra={"frontend": True})
         try: 
-            print("INFO: fetching system info from Lidarr")
+
             client = await self.get_client()
             root_folders = await client.get(
                 url="/api/v1/rootfolder",
@@ -95,7 +95,7 @@ class LidarrClient:
             }
             return system_info
         except Exception as e:
-            print(f"ERROR: failed to get system info from Lidarr: {e}")
+            logger.error(f"ERROR: failed to get system info from Lidarr: {e}")
             return {}
     
 
@@ -114,7 +114,7 @@ class LidarrClient:
             lookup.raise_for_status()
             return lookup.json()
         except Exception as e:
-            print(f"ERROR: failed to lookup release info from Lidarr: {e}")
+            logger.error(f"ERROR: failed to lookup release info from Lidarr: {e}")
             return {}
     #! #################################################################
     #! #################################################################
@@ -122,7 +122,8 @@ class LidarrClient:
     async def check_artist_in_library(self, artist_mbid: str) -> dict:
         logger.info("checking artist in lidarr library", extra={"frontend": True})
         try:
-            print(f"INFO: checking if artist with mbid: {artist_mbid} exists in Lidarr library")
+            logger.info(f"INFO: checking if artist with mbid: {artist_mbid} exists in Lidarr library")
+            logger.info(f"checking if artist with mbid: {artist_mbid} exists in Lidarr library")
             client = await self.get_client()
             artist = await client.get(
                 url="/api/v1/artist",
@@ -135,7 +136,7 @@ class LidarrClient:
 
 
         except Exception as e:
-            print(f"ERROR: failed to check artist in library from Lidarr: {e}")
+            logger.error(f"ERROR: failed to check artist in library from Lidarr: {e}")
             return {}
 
     async def add_artist_to_library(
@@ -150,7 +151,7 @@ class LidarrClient:
     ) -> dict:
         logger.info("adding artist to lidarr library", extra={"frontend": True})
         try:
-            print(f"INFO: adding artist to Lidarr library with mbid: {artist_mbid}")
+            logger.info(f"INFO: adding artist to Lidarr library with mbid: {artist_mbid}")
             client = await self.get_client()
             payload = {
                 "foreignArtistId": artist_mbid,
@@ -180,7 +181,7 @@ class LidarrClient:
             added_artist = added_artist.json()
             return added_artist
         except Exception as e:
-            print(f"ERROR: failed to add artist to library in Lidarr: {e}")
+            logger.error(f"ERROR: failed to add artist to library in Lidarr: {e}")
             return {}
 
 
@@ -188,7 +189,7 @@ class LidarrClient:
     async def check_release_group_in_library(self, release_group_mbid: str) -> dict:
         logger.info("checking release group in lidarr library", extra={"frontend": True})
         try: 
-            print(f"INFO: checking if release group with mbid: {release_group_mbid} exists in Lidarr library")
+            logger.info(f"INFO: checking if release group with mbid: {release_group_mbid} exists in Lidarr library")
             client = await self.get_client()
             release_group = await client.get(
                 url="/api/v1/album",
@@ -199,7 +200,7 @@ class LidarrClient:
             release_group.raise_for_status()
             return release_group.json()
         except Exception as e:
-            print(f"ERROR: failed to check if album in Lidarr library: {e}")
+            logger.error(f"ERROR: failed to check if album in Lidarr library: {e}")
             return {}
 
 
@@ -212,10 +213,10 @@ class LidarrClient:
         try: 
             client = await self.get_client()
             
-            print("INFO: adding release group to Lidarr library - FUNCTION NOT IMPLEMENTED YET")
+
             return {}
         except Exception as e:
-            print(f"ERROR: failed to check if album in Lidarr library: {e}")
+            logger.error(f"ERROR: failed to check if album in Lidarr library: {e}")
             return {}
     #! #################################################################
     #! #################################################################
@@ -223,7 +224,7 @@ class LidarrClient:
     async def set_monitor_release_group(self, release_group_lrid: int, monitored: bool = True) -> dict:
         logger.info("setting monitor for release group in lidarr", extra={"frontend": True})
         try: 
-            print(f"INFO: setting monitor={monitored} for release group in Lidarr with id: {release_group_lrid}")
+            logger.info(f"INFO: setting monitor={monitored} for release group in Lidarr with id: {release_group_lrid}")
             client = await self.get_client()
             payload = {
                 "albumIds": [
@@ -239,7 +240,7 @@ class LidarrClient:
             updated_release_group = updated_release_group.json()
             return updated_release_group
         except Exception as e:
-            print(f"ERROR: failed to set monitor for release group in Lidarr: {e}")
+            logger.error(f"ERROR: failed to set monitor for release group in Lidarr: {e}")
             return {}
         
     async def set_release_in_release_group(self, release_group_data: dict, release_mbid: str) -> dict:
@@ -247,7 +248,7 @@ class LidarrClient:
         # release_group_data here is expected to be a return of get/album on lidarr api
         # id make an object for all this, cba
         try:
-            print(f"INFO: setting release with mbid: {release_mbid} in release group in Lidarr")
+            logger.info(f"INFO: setting release with mbid: {release_mbid} in release group in Lidarr")
             client = await self.get_client()
 
             if isinstance(release_group_data, list): 
@@ -265,13 +266,13 @@ class LidarrClient:
 
             return updated_release_group    
         except Exception as e:
-            print(f"ERROR: failed to set release in release group in Lidarr: {e}")
+            logger.error(f"ERROR: failed to set release in release group in Lidarr: {e}")
             return {}
 
     async def trigger_search_for_release_group(self, release_group_lrid: int) -> dict:
         logger.info("triggering search for release group in lidarr", extra={"frontend": True})
         try:
-            print(f"INFO: triggering search for release group in Lidarr with id: {release_group_lrid}")
+            logger.info(f"INFO: triggering search for release group in Lidarr with id: {release_group_lrid}")
             client = await self.get_client()
             payload = {
                 "name": "AlbumSearch",
@@ -289,7 +290,7 @@ class LidarrClient:
             command_status = command_status.json()
             return command_status
         except Exception as e:
-            print(f"ERROR: failed to trigger search for release group in Lidarr: {e}")
+            logger.error(f"ERROR: failed to trigger search for release group in Lidarr: {e}")
             return {}
 
     #! #################################################################
@@ -316,7 +317,7 @@ class LidarrClient:
             command_id = command_response.get("id")
 
 
-            print(f"INFO: waiting for metadata refresh command with id: {command_id} to complete")
+            logger.info(f"INFO: waiting for metadata refresh command with id: {command_id} to complete")
             if command_id:
                 elapsed = 0.0
 
@@ -331,20 +332,20 @@ class LidarrClient:
                     command_status = command_status.json()
                     status = command_status.get("status")
                     if status == "completed":
-                        print(f"INFO: metadata refresh command with id: {command_id} completed")
+                        logger.info(f"INFO: metadata refresh command with id: {command_id} completed")
                         return command_status
                     if status == "failed":
-                        print(f"ERROR: metadata refresh command with id: {command_id} failed")
+                        logger.error(f"ERROR: metadata refresh command with id: {command_id} failed")
                         return {}
-                    print(f"INFO: metadata refresh command with id: {command_id} status: {status}, waiting...")
+                    logger.info(f"INFO: metadata refresh command with id: {command_id} status: {status}, waiting...")
                     await asyncio.sleep(poll_interval)
                     elapsed += poll_interval
-            print(f"ERROR: metadata refresh command with id: {command_id} did not complete in time")
+            logger.error(f"ERROR: metadata refresh command with id: {command_id} did not complete in time")
             return {}
 
 
         except Exception as e:
-            print(f"ERROR: failed to trigger metadata refresh in Lidarr: {e}")
+            logger.error(f"ERROR: failed to trigger metadata refresh in Lidarr: {e}")
             return {}
         
     #! #################################################################
@@ -353,7 +354,7 @@ class LidarrClient:
     async def refresh_artist_metadata(self, artist_lrid: int, max_wait: float = 30.0, poll_interval: float = 0.3) -> dict:
         logger.info("triggering artist metadata refresh to affirm metadata presence before triggering download", extra={"frontend": True})
         try:
-            print(f"INFO: triggering artist metadata refresh to affirm metadata presence before triggering download")
+            logger.info(f"INFO: triggering artist metadata refresh to affirm metadata presence before triggering download")
             client = await self.get_client()
             payload = {
                 "name": "RefreshArtist",
@@ -372,7 +373,7 @@ class LidarrClient:
             command_id = command_response.get("id")
 
 
-            print(f"INFO: waiting for metadata refresh command with id: {command_id} to complete")
+            logger.info(f"INFO: waiting for metadata refresh command with id: {command_id} to complete")
             if command_id:
                 elapsed = 0.0
 
@@ -387,20 +388,20 @@ class LidarrClient:
                     command_status = command_status.json()
                     status = command_status.get("status")
                     if status == "completed":
-                        print(f"INFO: metadata refresh command with id: {command_id} completed")
+                        logger.info(f"INFO: metadata refresh command with id: {command_id} completed")
                         return command_status
                     if status == "failed":
-                        print(f"ERROR: metadata refresh command with id: {command_id} failed")
+                        logger.error(f"ERROR: metadata refresh command with id: {command_id} failed")
                         return {}
-                    print(f"INFO: metadata refresh command with id: {command_id} status: {status}, waiting...")
+                    logger.info(f"INFO: metadata refresh command with id: {command_id} status: {status}, waiting...")
                     await asyncio.sleep(poll_interval)
                     elapsed += poll_interval
-            print(f"ERROR: metadata refresh command with id: {command_id} did not complete in time")
+            logger.error(f"ERROR: metadata refresh command with id: {command_id} did not complete in time")
             return {}
 
 
         except Exception as e:
-            print(f"ERROR: failed to trigger metadata refresh in Lidarr: {e}")
+            logger.error(f"ERROR: failed to trigger metadata refresh in Lidarr: {e}")
             return {}
     
     async def fully_add_release(
@@ -411,27 +412,27 @@ class LidarrClient:
         quality_profile_id: int = 1,  #default profile, if not 1 its specified
         metadata_profile_id: int = 1, #default profile, if not 1 its specified
         root_folder_path: str | None = None, #default, gets picked from system info if None
-        query: str | None = None, #for ui
+        query: str | None = None, #for ui l8r mby 
         artist_name: str = "artistName", #not needed, can be handy if i find out it needed lol
         release_mbid: str | None = None, #optional, if specified it gets picked if not its default
         monitor_artist: bool = True, #optional, if specified it sets the artist to monitored
     ) -> dict:
         logger.info("fully adding release to lidarr", extra={"frontend": True})
         try:
-            print("INFO: starting full add of release to Lidarr")
+
 
             # ? system info gets called on page load, but if a folder is not picked
             # ? we call system info to get the default root folder
             if not root_folder_path:
-                print("INFO: no root folder path specified, fetching from Lidarr system info")
+
                 system_info = await self.get_system_info()
                 
                 root_folder_path = system_info["root_folders"][0]["path"]
             
-            print(f"INFO: checking if artist with mbid: {artist_mbid}, name {artist_name} exists in Lidarr library")
+            logger.info(f"INFO: checking if artist with mbid: {artist_mbid}, name {artist_name} exists in Lidarr library")
             artist = await self.check_artist_in_library(artist_mbid)
             if not artist: 
-                print("INFO: artist not found in library")
+
                 artist = await self.add_artist_to_library(
                     artist_mbid=artist_mbid,
                     release_group_mbid=release_group_mbid,
@@ -444,14 +445,14 @@ class LidarrClient:
                 
                 release_group = await self.check_release_group_in_library(release_group_mbid)
             else:
-                print(f"INFO: artist was already added")
+                logger.info(f"INFO: artist was already added")
                 release_group = await self.check_release_group_in_library(release_group_mbid)
 
             if isinstance(artist, list): 
                 artist = artist[0]
                         
             if not release_group:
-                print(f"INFO: release group not found in library yet, forcing artist metadata refresh to affirm release group presence")
+                logger.info(f"INFO: release group not found in library yet, forcing artist metadata refresh to affirm release group presence")
                 await self.refresh_artist_metadata(
                     artist_lrid=artist["id"]
                 )
@@ -487,29 +488,29 @@ Either try a less strict metadata profile or add release manually."""
             
 
             if release_mbid:
-                print(f"INFO specific release has been specified")
+                logger.info(f"INFO specific release has been specified")
                 monitored_release_group = await self.set_release_in_release_group(
                     release_group_data=monitored_release_group,
                     release_mbid=release_mbid
                 )
 
             if auto_download:
-                print(f"INFO: Auto download is true")
+                logger.info(f"INFO: Auto download is true")
 
 
                 await self.refresh_artist_metadata(
                     artist_lrid=artist["id"]
                 )
                 await asyncio.sleep(1.0)
-                print(f"INFO: triggering search for release group to start download")
+                logger.info(f"INFO: triggering search for release group to start download")
                 await self.trigger_search_for_release_group(
                     release_group_lrid=release_group['id']
                 )
 
             return monitored_release_group
         except Exception as e:
-            print(f"ERROR: failed to fully add release to Lidarr: {e}")
-            print(f"ERROR: Error is coming from: {traceback.format_exc()}")
+            logger.error(f"ERROR: failed to fully add release to Lidarr: {e}")
+            logger.error(f"ERROR: Error is coming from: {traceback.format_exc()}")
             return {}
 
 
@@ -545,9 +546,9 @@ async def test():
 
     for release_group in full_search["release-groups"]:
 
-        print(f"INFO: found release-group with title: {release_group['title']}, id: {release_group['id']}, score: {release_group['score']}, artist: {release_group['artist-credit'][0]['artist']['name']}")
+        logger.info(f"INFO: found release-group with title: {release_group['title']}, id: {release_group['id']}, score: {release_group['score']}, artist: {release_group['artist-credit'][0]['artist']['name']}")
         if is_first:
-            print(f"INFO: found releases for first release-group:")
+            logger.info(f"INFO: found releases for first release-group:")
             for release in full_search["best-match-releases"]:
                 print(f"\trelease title: {release['title']}, id: {release['id']}, date: {release.get('date', 'N/A')}, medium: {release.get('mediums', 'N/A')}")
             is_first = False

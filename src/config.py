@@ -1,5 +1,6 @@
 import os
 from dotenv import load_dotenv
+from src.logger import logger
 
 load_dotenv()
 
@@ -12,20 +13,20 @@ class Config:
     def exists(cls, env_var: str):
         value = os.getenv(env_var)
         if not value: 
-            print(f"ERROR: {env_var} not set either in .env config file or environment")
+            logger.error(f"{env_var} not set either in .env config file or environment")
         return value
 
     @classmethod
     def check(cls):
         if not cls.LIDARR_URL:
-            print("ERROR: LIDARR_URL not set in .env")
-        else: print(f"INFO: LIDARR_URL found: {cls.LIDARR_URL[:4]}****")
+            logger.error("LIDARR_URL not found in environment", extra={"frontend": True})
+        else: logger.info(f"LIDARR_URL found: {cls.LIDARR_URL[:4]}****")
         if not cls.LIDARR_APIKEY:
-            print("ERROR: LIDARR_APIKEY not set in .env")
-        else: print(f"INFO: LIDARR_APIKEY found: {cls.LIDARR_APIKEY[:4]}****")
+            logger.error("LIDARR_APIKEY not found in environment", extra={"frontend": True})
+        else: logger.info(f"LIDARR_APIKEY found: {cls.LIDARR_APIKEY[:4]}****")
         if not cls.MUSICBRAINZ_USERAGENT:
-            print("ERROR: MUSICBRAINZ_USERAGENT not set in .env")
-        else: print(f"INFO: MUSICBRAINZ_USERAGENT found: {cls.MUSICBRAINZ_USERAGENT[:4]}****")
+            logger.error("MUSICBRAINZ_USERAGENT not found in environment", extra={"frontend": True})
+        else: logger.info(f"MUSICBRAINZ_USERAGENT found: {cls.MUSICBRAINZ_USERAGENT[:4]}****")
 
 
 

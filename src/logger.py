@@ -28,12 +28,29 @@ class SSEHandler(logging.Handler):
             pass
 
 def setup_logging(): 
+    logger = logging.getLogger()
+    logger.setLevel(logging.INFO)
+
     StreamHandler = SSEHandler()
     StreamHandler.setFormatter(logging.Formatter('%(asctime)s - %(levelname)s - %(message)s'))
 
-    logger = logging.getLogger()
-    logger.setLevel(logging.INFO)
+    ConsoleHandler = logging.StreamHandler()
+    ConsoleHandler.setFormatter(logging.Formatter('%(levelname)s: %(message)s'))
+
+    
+    
+    logger.handlers = []
     logger.addHandler(StreamHandler)
+    logger.addHandler(ConsoleHandler)
     return logging.getLogger()
+
+def cleanup_logging():
+    logger = logging.getLogger()
+    handlers = logger.handlers[:]
+    for handler in handlers:
+        logger.removeHandler(handler)
+        handler.close()
+    logging.shutdown()
+
 logger = setup_logging()
     

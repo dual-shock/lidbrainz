@@ -1,12 +1,12 @@
 from src.api.lidarr_endpoint import LidarrClient
-from fastapi import APIRouter, HTTPException, Query
+from fastapi import APIRouter, HTTPException, Query, Request
+from src.logger import logger
 
 router = APIRouter()
 
-lidarr_client = LidarrClient()
-
 @router.get("/fully_add_release")
 async def fully_add_release(
+    request: Request,
     release_group_mbid: str,
     artist_mbid: str,
     auto_download: bool = True,
@@ -18,8 +18,8 @@ async def fully_add_release(
     release_mbid: str | None = None, #optional, if specified it gets picked if not its default
     monitor_artist: bool = True, #optional, if specified it sets the artist to monitored
 ):
-    print("INFO: running fully_add_release from fastAPI server")
     try:
+        lidarr_client = request.app.state.lidarr_client
         result = await lidarr_client.fully_add_release(
             release_group_mbid,
             artist_mbid,
@@ -34,17 +34,17 @@ async def fully_add_release(
         )
         return result
     except Exception as e:
-        print(f"ERROR: Exception in /fully_add_release: {e}")
+        logger.error(f"ERROR: Exception in /fully_add_release: {e}")
         raise HTTPException(status_code=500, detail=f"Error adding release to Lidarr: {e}")
     
 
 @router.get("/system_info")
-async def system_info():
-    print("INFO: running system_info from fastAPI server")
+async def system_info(request: Request):
     try:
+        lidarr_client = request.app.state.lidarr_client
         system_info = await lidarr_client.get_system_info()
         return system_info
     except Exception as e:
-        print(f"ERROR: Exception in /system_info endpoint: {e}")
+        logger.error(f"ERROR: Exception in /system_info endpoint: {e}")
         raise HTTPException(status_code=500, detail=f"Error retrieving Lidarr system info: {e}")
 

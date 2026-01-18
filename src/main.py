@@ -1,3 +1,4 @@
+import logging
 from src.config import Config
 from src.api.app import start
 import uvicorn 
@@ -5,11 +6,11 @@ import asyncio
 from src.logger import logger
 
 
+
+
+
 def main():
-
     Config.check()
-
-
     api_app = start()
 
     config = uvicorn.Config(
@@ -20,8 +21,14 @@ def main():
         loop="asyncio",
     )
     server = uvicorn.Server(config)
-    server.run()
-    
+    try: 
+        server.run()
+
+    except (KeyboardInterrupt, asyncio.CancelledError) as e:
+        logger.info("Manually shutting down server due to KeyboardInterrupt...")
+        pass
+
+
 
 
 if __name__ == "__main__":
