@@ -25,7 +25,7 @@ _Note: if you're an **UnRaid** user like me, ive added a template that can be ma
 2. fill in the ```.env.example``` file, and rename it to just ```.env```, if you're unsure about how to format your MusicBrainz user agent see [here](https://MusicBrainz.org/doc/MusicBrainz_API/Rate_Limiting) <br> fill in the ```docker-compose.example.yml``` and rename it to just ```docker-compose.yml``` (here you can change the exposed port and docker network, if your Lidarr is running on a custom network for example)
 
 ### Running
-run docker compose from the same folder as your cloned repo / docker-compose file:<br>> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`docker-compose up -d`<br>this by default starts the container on localhost:8080, or whatever port you configured it to. 
+run docker compose from the same folder as your cloned repo / docker-compose file:<br><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`docker-compose up -d`<br><br>this by default starts the container on localhost:8080, or whatever port you configured it to. 
 
 
 

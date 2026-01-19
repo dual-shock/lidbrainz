@@ -102,6 +102,11 @@ class MusicBrainzClient:
                     logger.warning(f"WARN: Response text: {exc.response.text[:200]}")
                     await asyncio.sleep(3.0)
                     continue
+
+                if status == 403: 
+                    logger.error(f"MusicBrainz forbid your request, this is likely because of missing/invalid User-Agent header", extra={"frontend": True})
+                    logger.error(f"ERROR: Response text: {exc.response.text[:200]}")
+                    break
                     
                 if status == 429:  
                     logger.warning(f"WARN: Rate limited by server (429), waiting 10s...")
@@ -152,7 +157,6 @@ class MusicBrainzClient:
         first_release_group = release_groups["release-groups"][0] 
 
         first_release_group_releases = await self.get_releases(first_release_group["id"])
-        print("TEST",first_release_group_releases)
         return {
             "release-groups": release_groups["release-groups"],
             "best-match-releases": first_release_group_releases["releases"]

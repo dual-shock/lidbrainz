@@ -29,9 +29,11 @@ class LidarrClient:
     async def get_client(self) -> httpx.AsyncClient:
         logger.info("getting lidarr httpx AsyncClient")
         if not self.client or self.client.is_closed:
-
-
-            if not Config.LIDARR_URL or not Config.LIDARR_APIKEY:
+            if not Config.LIDARR_URL:
+                logger.error("LIDARR_URL is not configured", extra={"frontend": True})
+                raise ValueError("LIDARR_URL or LIDARR_APIKEY is not configured")
+            if not Config.LIDARR_APIKEY:
+                logger.error("LIDARR_APIKEY is not configured", extra={"frontend": True})
                 raise ValueError("LIDARR_URL or LIDARR_APIKEY is not configured")
 
             self.client = httpx.AsyncClient(
@@ -450,6 +452,7 @@ class LidarrClient:
                 release_group = await self.check_release_group_in_library(release_group_mbid)
             else:
                 logger.info(f"INFO: artist was already added")
+                logger.info(f"artist already found in library, not adding artist")
                 release_group = await self.check_release_group_in_library(release_group_mbid)
 
             if isinstance(artist, list): 
@@ -464,9 +467,9 @@ class LidarrClient:
             release_group = await self.check_release_group_in_library(release_group_mbid)
 
             if not release_group:
-                logger.error(
-f"""ERROR: release group with mbid: {release_group_mbid} still not found in Lidarr
-library after artist add and metadata refresh, this is likely because 
+                logger.warning(
+f"""Release group with mbid: {release_group_mbid} still not found in Lidarr
+library after adding artist and refreshing metadata, this is likely because 
 your METADATA PROFILE doesnt find this release. 
 Either try a less strict metadata profile or add release manually.""", 
                     extra={"frontend": True}

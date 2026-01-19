@@ -13,7 +13,7 @@
         background-position: 0 0, 0 0;
     }
     100% {
-        background-position: 40px 50px, 40px 50px; /* move diagonally by one grid step */
+        background-position: 40px 50px, 40px 50px; 
     }
 }
 .background-layer {
@@ -28,7 +28,7 @@
         linear-gradient(to bottom, var(--background-color-decor) 1px, transparent 1px);
     background-size: 20px 25px;
     z-index: -2;
-    /* animation: moveGrid 4s linear infinite; */
+
 }
 
 .background-layer::after {
@@ -95,7 +95,7 @@ body {
         flex-direction: column;
         overflow-y: auto;
         min-height: 0;
-        height:calc(100% - 38px); /* subtracting h3 height and hr margin */
+        height:calc(100% - 38px); 
         scrollbar-color: var(--white-secondary-text) transparent;
     }
         .event-item{
@@ -289,7 +289,6 @@ body {
         margin-right: 0;
     }
     to {
-        /* Set this to a value larger than any expected image width */
         max-width: 25em; 
         opacity: 1;
         margin-right: 10px;

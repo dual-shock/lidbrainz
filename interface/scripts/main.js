@@ -3,9 +3,27 @@
 
 document.addEventListener('DOMContentLoaded', async () => {
     console.log('DOM fully loaded, getting lidarr info');
-    const lidarrUrl = await refreshLidarrInfo();
+    
     const lidbrainzEventLog = document.getElementById('logs-scrollable');
     const lidbrainzEventSource = new EventSource('/lidbrainz/interface_logs/interface_logs');
+
+    let lidarrUrl = await refreshLidarrInfo();
+    if(lidarrUrl == undefined){
+        const eventItem = document.createElement('div');
+        eventItem.className = 'event-item';
+        eventItem.innerHTML = `
+            <div class="first-row">
+                <h5 class="text default event-type WARNING">WARNING</h5>
+                <h5 class="text white event-time">[${new Date().toLocaleTimeString()}]</h5>
+            </div>
+            <div class="second-row">
+                <h4 class="text event-content-indent">└─╲</h5> 
+                <h5 class="text default-secondary event-content">It seems no Lidarr URL has been configured.</h5>
+            </div>
+        `;
+        lidbrainzEventLog.prepend(eventItem);
+    }
+
     lidbrainzEventSource.onmessage = async function(event) {
         const data = JSON.parse(event.data);
         console.log("Lidbrainz Event:", data);
@@ -67,7 +85,6 @@ function loadAllCoverImages(parentContainer) {
                 imageWrapper.prepend(imageDiv);
             })
             .catch((encodingError) => {
-                // FAILURE: Either 404 or corrupted image
                 console.warn(`Cover missing or decode failed for ${mbid}`);
             });
     });

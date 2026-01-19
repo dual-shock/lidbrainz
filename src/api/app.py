@@ -34,9 +34,10 @@ def start() -> FastAPI:
     
 
     logger.info("adding routers")
+    app.include_router(interface_logs.router, prefix="/lidbrainz/interface_logs", tags=["interface_logs"])
     app.include_router(search_musicbrainz.router, prefix="/lidbrainz/search_musicbrainz", tags=["search_musicbrainz"])
     app.include_router(add_to_lidarr.router, prefix="/lidbrainz/add_to_lidarr", tags=["add_to_lidarr"])
-    app.include_router(interface_logs.router, prefix="/lidbrainz/interface_logs", tags=["interface_logs"])
+
 
 
     logger.info("mounting static interface files")
