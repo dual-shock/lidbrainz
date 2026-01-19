@@ -301,7 +301,7 @@ class LidarrClient:
     #! #################################################################
     #! currently unused cause it doesnt work, the auto post-grab not respected
    
-    async def refresh_release_group_metadata(self, release_group_lrid: int, max_wait: float = 30.0, poll_interval: float = 0.3) -> dict:
+    async def refresh_release_group_metadata(self, release_group_lrid: int, max_wait: float = 60.0, poll_interval: float = 0.3) -> dict:
         logger.info("triggering release-group metadata refresh to affirm metadata presence before triggering download")
         try:
             client = await self.get_client()
@@ -345,10 +345,8 @@ class LidarrClient:
                     logger.info(f"INFO: metadata refresh command with id: {command_id} status: {status}, waiting...")
                     await asyncio.sleep(poll_interval)
                     elapsed += poll_interval
-            logger.error(f"ERROR: metadata refresh command with id: {command_id} did not complete in time")
+            logger.error(f"metadata refresh command with id: {command_id} did not complete in time {max_wait}s", extra={"frontend": True})
             return {}
-
-
         except Exception as e:
             logger.error(f"failed to trigger metadata refresh in lidarr", extra={"frontend": True})
             return {}
@@ -356,7 +354,7 @@ class LidarrClient:
     #! #################################################################
     #! #################################################################
 
-    async def refresh_artist_metadata(self, artist_lrid: int, max_wait: float = 30.0, poll_interval: float = 0.3) -> dict:
+    async def refresh_artist_metadata(self, artist_lrid: int, max_wait: float = 60.0, poll_interval: float = 0.3) -> dict:
         logger.info("triggering artist metadata refresh to affirm metadata presence before triggering download")
         try:
             logger.info(f"INFO: triggering artist metadata refresh to affirm metadata presence before triggering download")
@@ -396,12 +394,12 @@ class LidarrClient:
                         logger.info(f"INFO: metadata refresh command with id: {command_id} completed")
                         return command_status
                     if status == "failed":
-                        logger.error(f"failed to trigger metadata refresh in lidarr", extra={"frontend": True})
+                        logger.error(f"metadata refresh command with id: {command_id} failed", extra={"frontend": True})
                         return {}
                     logger.info(f"INFO: metadata refresh command with id: {command_id} status: {status}, waiting...")
                     await asyncio.sleep(poll_interval)
                     elapsed += poll_interval
-            logger.error(f"failed to trigger metadata refresh in lidarr", extra={"frontend": True})
+            logger.error(f"metadata refresh command with id: {command_id} did not complete in time {max_wait}s", extra={"frontend": True})
             return {}
 
 

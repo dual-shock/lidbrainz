@@ -28,7 +28,7 @@
         linear-gradient(to bottom, var(--background-color-decor) 1px, transparent 1px);
     background-size: 20px 25px;
     z-index: -2;
-
+    animation: moveGrid 5s linear infinite;
 }
 
 .background-layer::after {
@@ -308,6 +308,7 @@ body {
     max-width: 0;
     opacity: 0;
     animation: expandRight 0.2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    flex-shrink:0;
     
 }
 .results-box-image img{
