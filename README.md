@@ -4,11 +4,11 @@
   <img src="interface/assets/icon.svg" width="128" height="128">
 </p>
 
-A simple one-page interface to manage all Lidarr requests, built upon the MusicBrainz api, centered around specific Releases and **Release Groups** (instead of artists), i.e. albums, singles, mixtapes, etc. If a release is on MusicBrainz, LidBrainz can search for and find it in ~1 - 2 seconds. With one click it can be added to your Lidarr instance and automatically search (for your linux ISOs, ofc.) 
+A simple one-page interface to manage all Lidarr requests, built upon the MusicBrainz api, centered around specific Releases and **Release Groups** (instead of artists), i.e. albums, singles, mixtapes, etc. If a release is on MusicBrainz, LidBrainz can search for and find it in ~1 - 2 seconds. With one click it can be added to your Lidarr instance and automatically search (linux ISOs) 
 
 ![Alt text](assets/videos/demo_1.gif)
 
-_Please note; this is a container i made for my own server and to get a docker container project under my belt, its not vibecoded so its probably kinda shitty, the code is a mess, and theres certainly better alternatives out there. buuut if you like it thats awesome :)_<3
+_Please note; this is a silly and fun container i made for my own server and to get a docker container project under my belt, its not vibecoded so its probably kinda shitty, the code is a mess, and theres certainly better alternatives out there. buuut if you like it thats awesome :)_<3
 
 
 
