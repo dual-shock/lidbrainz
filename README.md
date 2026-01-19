@@ -13,7 +13,7 @@ _Please note; this is a container i made for my own server and to get a docker c
 
 
 ## Installation
-_Note: if you're an **UnRaid** user like me, ive added a template that can be manually added and used, instructions are [below]()_
+_Note: if you're an **UnRaid** user like me, ive added a template that can be manually added and used, instructions are [below](https://github.com/dual-shock/lidbrainz/tree/main?tab=readme-ov-file#installation-unraid)_
 ### Prerequisites:
 1. a running Lidarr instance reachable from this container
 2. some public url/email u can put in the MusicBrainz user agent
@@ -25,10 +25,7 @@ _Note: if you're an **UnRaid** user like me, ive added a template that can be ma
 2. fill in the ```.env.example``` file, and rename it to just ```.env```, if you're unsure about how to format your MusicBrainz user agent see [here](https://MusicBrainz.org/doc/MusicBrainz_API/Rate_Limiting) <br> fill in the ```docker-compose.example.yml``` and rename it to just ```docker-compose.yml``` (here you can change the exposed port and docker network, if your Lidarr is running on a custom network for example)
 
 ### Running
-&nbsp;&nbsp;&nbsp;&nbsp;run docker compose from the same folder as your cloned repo / docker-compose file.
-```bash
-docker-compose up -d
-```
+run docker compose from the same folder as your cloned repo / docker-compose file.<br>`docker-compose up -d`<br>this by default starts the container on localhost:8080, or whatever port you configured it to. 
 
 
 

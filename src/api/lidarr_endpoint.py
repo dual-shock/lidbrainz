@@ -59,8 +59,8 @@ class LidarrClient:
         
     async def get_system_info(self) -> dict:
         logger.info("fetching system info from lidarr", extra={"frontend": True})
-        logger.warning("fetching system info from lidarr Warning Test", extra={"frontend": True})
-        logger.error("fetching system info from lidarr Error Test", extra={"frontend": True})
+        # logger.warning("fetching system info from lidarr Warning Test", extra={"frontend": True})
+        # logger.error("fetching system info from lidarr Error Test", extra={"frontend": True})
         try: 
 
             client = await self.get_client()

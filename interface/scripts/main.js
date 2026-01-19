@@ -431,9 +431,7 @@ function createReleaseGroupElement(releaseGroup, releases = null) {
 
     const div = document.createElement('div');
     div.className = 'results-box release-group-result';
-    if (score < 90) {
-        div.style.opacity = '0.55';
-    }
+
     let html = `
         <div class="release-group-header">
             <div class="shrinkable">
@@ -542,7 +540,9 @@ function createReleaseGroupElement(releaseGroup, releases = null) {
             }
         });
     }
-
+    if (score < 90) {
+        imageWrapper.style.opacity = '0.55';
+    }
     imageWrapper.appendChild(div);
 
     return imageWrapper;

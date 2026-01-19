@@ -1,0 +1,16 @@
+version: "3.8"
+services: 
+  lidbrainz:
+    image: dualshock/lidbrainz:dev  
+    container_name: lidbrainz
+    restart: unless-stopped
+    env_file: 
+      - .env 
+    environment: 
+      - LIDARR_URL=${LIDARR_URL}
+      - LIDARR_APIKEY=${LIDARR_APIKEY}
+      - MUSICBRAINZ_USERAGENT=${MUSICBRAINZ_USERAGENT}
+    ports: 
+      - "8080:8080"  
+    # this exposes port on your host, to change it modify xxxx:8080, xxxx being
+    # the port you want to expose. This is automatically handled in unraid. 
