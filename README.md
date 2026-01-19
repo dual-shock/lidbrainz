@@ -4,8 +4,6 @@
   <img src="interface/assets/icon.svg" width="128" height="128">
 </p>
 
----
-
 A simple one-page interface to manage all Lidarr requests, built upon the MusicBrainz api, centered around specific Releases and **Release Groups** (instead of artists), i.e. albums, singles, mixtapes, etc. If a release is on MusicBrainz, LidBrainz can search for and find it in ~1 - 2 seconds. With one click it can be added to your Lidarr instance and automatically search (for your linux ISOs, ofc.) 
 
 ![Alt text](assets/videos/demo_1.gif)
@@ -27,7 +25,7 @@ If youre like me and can be a little picky about specific releases in release gr
 ### Specifying settings (folder, metadata/quality profile, auto-grab)
 the ui has buttons and dials for all those things, i like knowing exactly what i do when i add stuff. thats abt it xP
 
----
+
 
 ## (more importantly) Non-features (and how they dont work)
 Like i said earlier, being lightweight and fast (and working _just enough_) was and is the only focus of the application, so a lot of features like authentication, (as in a login page, api header auth is being added soon, login page too who knows *shrugs), mobile styling, additional recommendations, batch adding artist discograpghies, and editing / deleting in your lidarr library is not present. (that last part likely wont ever be either, im not planning on putting a single PUT or DELETE request in here lol)
@@ -45,7 +43,7 @@ The search functionality is basically just a wrapper on top of the musicbrainz s
 I scrapped together this ui with my high school html and css knowledge, and it works for most desktops! but i have not even begun to look at making it mobile friendly lol
 
 
----
+
 ## Installation 
 _Note: if you're an **UnRaid** user like me, ive added a template that can be manually added and used, instructions are [below]()_
 ### Prerequisites: 
@@ -63,10 +61,9 @@ _Note: if you're an **UnRaid** user like me, ive added a template that can be ma
 ```bash
 docker-compose up -d
 ```
---- 
 
 
----
+
 ## Installation (UnRaid)
 since i made this for myself, and i use UnRaid, ive included an unraid template that'll let you manually add a template to run this container like any of your other UnRaid docker containers!
 
@@ -84,7 +81,7 @@ _Note: given this container was just made for myself and is just in development,
 
 it should now run just like any other UnRaid docker container, and you can automatically pull eventual updates through the docker tab. 
 
----
+
 
 ## who is this for?
 lidarr uses musicbrainz, most of the music i listen to is on musicbrainz, this app uses musicbrainz and lidarr to search for and subsequently download linux ISOs.
@@ -98,7 +95,7 @@ things like what stuff is grabbed from your indexers is all set up in lidarr, pe
 ## who is this NOT for
 basically anyone who wants more functionality than whats mentioned above. 
 
----
+
 
 ## probable issues
 - Failing to add to lidarr because of metadata profiles: if you try to add a single, but the metadata profile youve selected only includes albums, the single wont be present in your lidarr library and therefore cannot be added. The fix for this is to use another metadata profile
