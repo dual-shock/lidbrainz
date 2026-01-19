@@ -17,8 +17,9 @@ _Note: if you're an **UnRaid** user like me, ive added a template that can be ma
 ### Prerequisites:
 1. a running Lidarr instance reachable from this container
 2. some public url/email u can put in the MusicBrainz user agent
-3. (optional, but **highly** recommended), a not-so-restrictive metadata profile, and a **good quality profile** based on your preferences. A good quality profile will vastly increase the quality of your automatic searches, _**which can be triggered from within LidBrainz**_.
-4. (optional, but recommended) if youre not already using slskd and tubifarry, i highly recommend it, its awesome
+3. docker
+4. (optional, but **highly** recommended), a not-so-restrictive metadata profile, and a **good quality profile** based on your preferences. A good quality profile will vastly increase the quality of your automatic searches, _**which can be triggered from within LidBrainz**_.
+5. (optional, but recommended) if youre not already using slskd and tubifarry, i highly recommend it, its awesome
 
 ### Environment:
 1. either clone the repo: ```git clone https://github.com/dual-shock/LidBrainz.git``` <br> or just grab the ```docker-compose.example.yml``` file
