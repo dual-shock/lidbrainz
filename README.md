@@ -10,11 +10,36 @@ A simple one-page interface to manage all Lidarr requests, built upon the MusicB
 
 _Please note; this is a container i made for my own server and to get a docker container project under my belt, its not vibecoded so its probably kinda shitty, the code is a mess, and theres certainly better alternatives out there. buuut if you like it thats awesome :)_<3
 
+
+
+## Installation
+_Note: if you're an **UnRaid** user like me, ive added a template that can be manually added and used, instructions are [below]()_
+### Prerequisites:
+1. a running lidarr instance reachable from this container
+2. some public url/email u can put in the musicbrainz user agent
+3. (optional, but **highly** recommended), a not-so-restrictive metadata profile, and a **good quality profile** based on your preferences. A good quality profile will vastly increase the quality of your automatic searches, _**which can be triggered from within LidBrainz**_.
+4. (optional, but recommended) if youre not already using slskd and tubifarry, i highly recommend it, its awesome
+
+### Environment:
+1. either clone the repo: ```git clone https://github.com/dual-shock/lidbrainz.git``` <br> or just grab the ```docker-compose.example.yml``` file
+2. fill in the ```.env.example``` file, and rename it to just ```.env```, if you're unsure about how to format your musicbrainz user agent see [here](https://musicbrainz.org/doc/MusicBrainz_API/Rate_Limiting) <br> fill in the ```docker-compose.example.yml``` and rename it to just ```docker-compose.yml``` (here you can change the exposed port and docker network, if your lidarr is running on a custom network for example)
+
+### Running
+&nbsp;&nbsp;&nbsp;&nbsp;run docker compose from the same folder as your cloned repo / docker-compose file.
+```bash
+docker-compose up -d
+```
+
+
+
 ## Features (and sorta how they work)
-LidBrainz focuses mainly on being lightweight and fast, what i found lacking in Lidarr itself. Its also focused on being transparent about whats happening "under the hood", with clear logs and the ability to change more or less every setting for adding music to lidarr (with more options to come). 
+LidBrainz focuses mainly on being lightweight and fast, what i found lacking in Lidarr itself. Its also focused on being transparent about whats happening "under the hood", with clear logs and the ability to change more or less every setting for adding music to lidarr (with more options to come).
 
 ### Release centered querying:
-Lidarr itself and most forks or wrappers use Artist objects as the "main" form of adding and storing data, i didnt like this as 99% of the time i dont want ALL the releases of an artist, i usually just want 1-2 albums. LidBrainz handles this by automatically seeing if the artist of the release you want to add already exists in your library or not, and if it doesnt it'll add automatically add it with the correct release monitored (and all other releases un-monitored)
+<details>
+<summary>Example</summary>
+<pre>Lidarr itself and most forks or wrappers use Artist objects as the "main" form of adding and storing data, i didnt like this as 99% of the time i dont want ALL the releases of an artist, i usually just want 1-2 albums. LidBrainz handles this by automatically seeing if the artist of the release you want to add already exists in your library or not, and if it doesnt it'll add automatically add it with the correct release monitored (and all other releases un-monitored)</pre>
+</details>
 
 ### Speedy searches:
 LidBrainz takes around ~1 second per query, depending on how much you're querying and if you've configured your user agent correctly. This query contains 0 - 100 release groups immediately ready to be added to lidarr
@@ -41,26 +66,6 @@ The search functionality is basically just a wrapper on top of the musicbrainz s
 
 ### Mobile ui
 I scrapped together this ui with my high school html and css knowledge, and it works for most desktops! but i have not even begun to look at making it mobile friendly lol
-
-
-
-## Installation 
-_Note: if you're an **UnRaid** user like me, ive added a template that can be manually added and used, instructions are [below]()_
-### Prerequisites: 
-1. a running lidarr instance reachable from this container
-2. some public url/email u can put in the musicbrainz user agent
-3. (optional, but **highly** recommended), a not-so-restrictive metadata profile, and a **good quality profile** based on your preferences. A good quality profile will vastly increase the quality of your automatic searches, _**which can be triggered from within LidBrainz**_. 
-4. (optional, but recommended) if youre not already using slskd and tubifarry, i highly recommend it, its awesome
-
-### Environment: 
-1. either clone the repo: ```git clone https://github.com/dual-shock/lidbrainz.git``` <br> or just grab the ```docker-compose.example.yml``` file
-2. fill in the ```.env.example``` file, and rename it to just ```.env```, if you're unsure about how to format your musicbrainz user agent see [here](https://musicbrainz.org/doc/MusicBrainz_API/Rate_Limiting) <br> fill in the ```docker-compose.example.yml``` and rename it to just ```docker-compose.yml``` (here you can change the exposed port and docker network, if your lidarr is running on a custom network for example)
-
-### Running
-&nbsp;&nbsp;&nbsp;&nbsp;run docker compose from the same folder as your cloned repo / docker-compose file. 
-```bash
-docker-compose up -d
-```
 
 
 
