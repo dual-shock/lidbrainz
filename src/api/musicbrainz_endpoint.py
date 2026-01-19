@@ -37,7 +37,7 @@ class MusicBrainzClient:
         self.client: httpx.AsyncClient | None = None
     
     async def get_client(self) -> httpx.AsyncClient:
-        logger.info("getting MusicBrainz httpx AsyncClient", extra={"frontend": True})
+        logger.info("getting MusicBrainz httpx AsyncClient")
         if not self.client or self.client.is_closed:
 
             logger.info(f"INFO: user agent is {Config.MUSICBRAINZ_USERAGENT}")
@@ -74,7 +74,7 @@ class MusicBrainzClient:
             self.client = None
 
     async def request_with_retries(self, endpoint: str, params: dict, retry: bool = True) -> dict: #TODO turning retry on and off to be implemented
-        logger.info(f"requesting MusicBrainz endpoint", extra={"frontend": True})
+        logger.info(f"requesting MusicBrainz")
         attempt = 0
         while attempt < self.RETRIES:
             attempt += 1
@@ -111,6 +111,7 @@ class MusicBrainzClient:
                 
                 logger.error(f"ERROR: HTTP {status}: {exc.response.text[:200]}")
         logger.error("ERROR: exceeded maximum retries for MusicBrainz request without getting valid response")
+        logger.error("failed to get valid response from MusicBrainz after retries", extra={"frontend": True})
         return {
             "error": "Failed to get valid response from MusicBrainz after retries",
             "status": "failed"
@@ -127,7 +128,7 @@ class MusicBrainzClient:
         return await self.request_with_retries("release-group/", params)
 
     async def get_releases(self, release_group_id: str) -> dict:
-
+        logger.info("getting specific releases from musicbrainz", extra={"frontend": True})
         params = {
             "inc": "releases+media",
             "fmt": "json"
@@ -135,7 +136,7 @@ class MusicBrainzClient:
         return await self.request_with_retries(f"release-group/{release_group_id}", params)                 
     
     async def fully_search(self, query: str, limit: int = 5) -> dict:
-        logger.info(f"performing fully_search on MusicBrainz", extra={"frontend": True})
+        logger.info(f"searching musicbrainz...", extra={"frontend": True})
 
         params = {
             "query": query,
@@ -144,12 +145,14 @@ class MusicBrainzClient:
         }
         release_groups =  await self.request_with_retries("release-group/", params)
         if not release_groups["release-groups"]:
-
+            logger.info(f"no release groups found for query: ({query})", extra={"frontend": True})
             return {}
+        logger.info(f"release groups parsed", extra={"frontend": True})
     
         first_release_group = release_groups["release-groups"][0] 
 
         first_release_group_releases = await self.get_releases(first_release_group["id"])
+        print("TEST",first_release_group_releases)
         return {
             "release-groups": release_groups["release-groups"],
             "best-match-releases": first_release_group_releases["releases"]

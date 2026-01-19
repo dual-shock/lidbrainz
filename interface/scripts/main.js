@@ -1,4 +1,6 @@
 
+
+
 document.addEventListener('DOMContentLoaded', async () => {
     console.log('DOM fully loaded, getting lidarr info');
     const lidarrUrl = await refreshLidarrInfo();
@@ -17,8 +19,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         eventItem.className = 'event-item';
         eventItem.innerHTML = `
             <div class="first-row">
+                <h5 class="text default event-type ${data.event_type}">${data.event_type}</h5>
                 <h5 class="text white event-time">[${data.event_time}]</h5>
-                <h5 class="text default event-type">${data.event_type}</h5>
             </div>
             <div class="second-row">
                 <h4 class="text event-content-indent">└─╲</h5> 
@@ -29,6 +31,51 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 });
 const searchCache = {};
+
+
+function loadAllCoverImages(parentContainer) {
+    console.log(parentContainer)
+
+    const imageWrappers = parentContainer.querySelectorAll('.results-box-image-container[data-mbid]');
+
+    console.log(imageWrappers)
+    imageWrappers.forEach(imageWrapper => {
+        console.log(imageWrapper);
+        const mbid = imageWrapper.getAttribute('data-mbid');
+        console.log(mbid)
+        const thumbUrl = `https://coverartarchive.org/release-group/${mbid}/front-250`;
+
+
+        const tempImg = new Image();
+        tempImg.src = thumbUrl;
+        
+        tempImg.decode()
+            .then(() => {
+                const resultBox = imageWrapper.querySelector('.results-box.release-group-result');
+                const initialHeight = resultBox.getBoundingClientRect().height;
+                console.log(initialHeight)
+                tempImg.style.height = `${initialHeight - 2}px`;
+
+                const imageDiv = document.createElement('div');
+                imageDiv.className = 'results-box-image';
+
+                const img = document.createElement('img');
+                
+                tempImg.decoding = "sync";
+                
+                imageDiv.appendChild(tempImg);
+                imageWrapper.prepend(imageDiv);
+            })
+            .catch((encodingError) => {
+                // FAILURE: Either 404 or corrupted image
+                console.warn(`Cover missing or decode failed for ${mbid}`);
+            });
+    });
+}
+
+
+
+
 
 
 async function fetchLidarrInfo() {
@@ -53,7 +100,7 @@ async function refreshLidarrInfo() {
 }
 async function populateMetadataProfiles(profiles) {
     const container = document.getElementById('metadata-profile-select');
-    container.innerHTML = ''; // Clear existing options
+    container.innerHTML = ''; 
     profiles.forEach(profile => {
         console.log(profile.name, profile.id);
         const metadataProfileElementId = `metadata-profile-${profile.id}`;
@@ -69,7 +116,7 @@ async function populateMetadataProfiles(profiles) {
 }
 async function populateQualityProfiles(profiles) {
     const container = document.getElementById('quality-profile-select');
-    container.innerHTML = ''; // Clear existing options
+    container.innerHTML = ''; 
     const firstProfileId = profiles[0].id;
     profiles.forEach(profile => {
         console.log(profile.name, profile.id);
@@ -86,7 +133,7 @@ async function populateQualityProfiles(profiles) {
 }
 async function populateFolderProfiles(profiles) {
     const container = document.getElementById('folder-profile-select');
-    container.innerHTML = ''; // Clear existing options
+    container.innerHTML = ''; 
     const firstProfileId = profiles[0].id;
     profiles.forEach(profile => {
         console.log(profile.name, profile.path);
@@ -121,9 +168,10 @@ function getSettings() {
 function checkScrollability() {
     const resultsContainer = document.getElementById("search-results-scrollable")
     const logsContainer = document.getElementById("logs-scrollable")
-
+    console.log("Checking scrollability...");
     if (resultsContainer.scrollHeight > resultsContainer.clientHeight) {
     resultsContainer.classList.add('is-scrollable');
+    console.log("Results container is scrollable");
     } else {
     resultsContainer.classList.remove('is-scrollable');
     }
@@ -147,10 +195,30 @@ checkScrollability();
 const confirmSearchButton = document.getElementById('search-input-button');
 const releaseSearchInput = document.getElementById('release-search-input');
 const artistSearchInput = document.getElementById('artist-search-input');
+const incresaeLimitButton = document.getElementById('limit-increase');
+const decreaseLimitButton = document.getElementById('limit-decrease');
+const limitValueDisplay = document.getElementById('limit-value');
+
+incresaeLimitButton.addEventListener('click', () => {
+    let currentLimit = parseInt(limitValueDisplay.innerText);
+    if (currentLimit < 100) {
+        currentLimit += 1;
+        limitValueDisplay.innerText = currentLimit.toString();
+    }
+});
+
+decreaseLimitButton.addEventListener('click', () => {
+    let currentLimit = parseInt(limitValueDisplay.innerText);
+    if (currentLimit > 1) {
+        currentLimit -= 1;
+        limitValueDisplay.innerText = currentLimit.toString();
+    }
+});
 
 async function searchReleaseGroups(query) {
-    const params = new URLSearchParams({ 
-        query: query
+    const params = new URLSearchParams({
+        query: query,
+        limit: parseInt(limitValueDisplay.innerText)
     });
     const response = await fetch(`/lidbrainz/search_musicbrainz/fully_search?${params}`);
     if (!response.ok) {
@@ -160,10 +228,22 @@ async function searchReleaseGroups(query) {
     return response.json();
 }
 
+async function fetchReleases(releaseGroupMbid) {
+    const params = new URLSearchParams({
+        release_group_mbid: releaseGroupMbid
+    });
+    const response = await fetch(`/lidbrainz/search_musicbrainz/releases?${params}`);
+    if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.detail || 'Failed to fetch releases');
+    }
+    return response.json();
+}
+
 async function handleSearch() {
     const release = releaseSearchInput.value.trim();
     let artist = artistSearchInput.value.trim();
-    if(artist.toLowerCase() == "va"){
+    if(artist.toLowerCase() === "va"){
         artist = "Various Artists"
     }
 
@@ -196,6 +276,9 @@ confirmSearchButton.addEventListener('click', handleSearch);
 releaseSearchInput.addEventListener('keypress', (e) => {
     if (e.key === 'Enter') handleSearch();
 });
+artistSearchInput.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') handleSearch();
+});
 
 
 
@@ -213,6 +296,8 @@ function processSearchResults(results) {
     });
 
     checkScrollability();
+    console.log(container);
+    loadAllCoverImages(container);
 }
 
 async function handleAddReleaseGroup(releaseGroupId, artistId) {
@@ -299,7 +384,9 @@ function createReleaseElement(release, releaseGroupId, artistId) {
     div.className = 'release';
     div.innerHTML = `
         <div class="shrinkable">
-            <h4 class="text white releaseName">└─╲ ${title}&nbsp;</h4>
+            <h4 class="text white releaseName">└─╲ 
+                <a href="https://musicbrainz.org/release/${releaseId}" target="_blank" rel="noopener noreferrer">${title}</a>
+            &nbsp;</h4>
             <h4 class="text default releaseFormat">[${format}]▷╲</h4>
             <h4 class="text default releaseTracks">(${tracks}),&nbsp;</h4>
             <h4 class="text default-secondary releaseStatus">${status}</h4>
@@ -330,17 +417,31 @@ function createReleaseGroupElement(releaseGroup, releases = null) {
     const type = releaseGroup['primary-type'] || 'N/A';
     const score = releaseGroup.score ?? 'N/A';
     const releaseGroupId = releaseGroup.id;
-    const artistId = getArtistId(releaseGroup['artist-credit']); 
+    const artistId = getArtistId(releaseGroup['artist-credit']);
+
+
+    const imageWrapper = document.createElement('div');
+    imageWrapper.className = 'results-box-image-container';
+    imageWrapper.setAttribute('data-mbid', releaseGroupId);
+
+    // const imageDiv = document.createElement('div');
+    // imageDiv.className = 'results-box-image';
+    // imageDiv.setAttribute('data-mbid', releaseGroupId);
+    // imageWrapper.appendChild(imageDiv);
 
     const div = document.createElement('div');
     div.className = 'results-box release-group-result';
-
+    if (score < 90) {
+        div.style.opacity = '0.55';
+    }
     let html = `
         <div class="release-group-header">
             <div class="shrinkable">
                 <h3 class="text white-tertiary releaseGrpArtist">${artist} -&nbsp;</h3>
-                <h3 class="text white releaseGrpName">${title} (${year})&nbsp;</h3>
-                <h3 class="text white-tertiary releaseGrpType">[${type}] &nbsp;</h3>
+                <h3 class="text white releaseGrpName">
+                    <a href="https://musicbrainz.org/release-group/${releaseGroupId}" target="_blank" rel="noopener noreferrer">${title} (${year})</a>
+                </h3>
+                <h3 class="text white-tertiary releaseGrpType">&nbsp;[${type}] &nbsp;</h3>
             </div>
             <div class="non-shrinkable">
                 <h3 class="text default matchScore">Match%: ${score}</h3>
@@ -350,7 +451,23 @@ function createReleaseGroupElement(releaseGroup, releases = null) {
     `;
 
     if (releases && releases.length) {
-        html += `<hr><div class="release-group-releases"></div>`;
+        html += `
+            <hr>
+            <button class="releases-toggle-button" type="button">
+                <hr>
+                <h4 class="text white releaseName">Specific releases ▷ (${releases.length})</h4>
+            </button>
+<!--            <hr class="second-line">-->
+            <div class="release-group-releases"></div>
+        `;
+    } else if (releases === null) {
+        html += `
+            <hr>
+            <button class="releases-toggle-button fetch-releases-button" type="button">
+                <hr>
+                <h4 class="text white releaseName">Fetch releases</h4>
+            </button>
+        `;
     }
 
     div.innerHTML = html;
@@ -366,10 +483,69 @@ function createReleaseGroupElement(releaseGroup, releases = null) {
 
     if (releases && releases.length) {
         const releasesContainer = div.querySelector('.release-group-releases');
+        const toggleButton = div.querySelector('.releases-toggle-button');
+
         releases.forEach(r => releasesContainer.appendChild(createReleaseElement(r,releaseGroupId,artistId)));
+
+        toggleButton.addEventListener('click', () => {
+            releasesContainer.classList.toggle('expanded');
+
+            if (releasesContainer.classList.contains('expanded')) {
+                toggleButton.innerHTML = `<h4 class="text white releaseName">Specific releases ▽ (${releases.length})</h4>`;
+            } else {
+                toggleButton.innerHTML = `<h4 class="text white releaseName">Specific releases ▷ (${releases.length})</h4>`;
+            }
+
+            checkScrollability();
+        });
+    } else if (releases === null) {
+        const fetchButton = div.querySelector('.fetch-releases-button');
+
+        fetchButton.addEventListener('click', async () => {
+            try {
+                const result = await fetchReleases(releaseGroupId);
+                const fetchedReleases = result.releases;
+
+                const newHtml = `
+                    <hr>
+                    <button class="releases-toggle-button" type="button">
+                        <hr>
+                        <h4 class="text white releaseName">Specific releases ▷ (${fetchedReleases.length})</h4>
+                    </button>
+<!--                    <hr class="second-line">-->
+                    <div class="release-group-releases"></div>
+                `;
+
+                fetchButton.parentElement.querySelector('hr').remove();
+                fetchButton.remove();
+
+                div.insertAdjacentHTML('beforeend', newHtml);
+
+                const releasesContainer = div.querySelector('.release-group-releases');
+                const toggleButton = div.querySelector('.releases-toggle-button');
+
+                fetchedReleases.forEach(r => releasesContainer.appendChild(createReleaseElement(r, releaseGroupId, artistId)));
+
+                toggleButton.addEventListener('click', () => {
+                    releasesContainer.classList.toggle('expanded');
+
+                    if (releasesContainer.classList.contains('expanded')) {
+                        toggleButton.innerHTML = `<h4 class="text white releaseName">Specific releases ▽ (${fetchedReleases.length})</h4>`;
+                    } else {
+                        toggleButton.innerHTML = `<h4 class="text white releaseName">Specific releases ▷ (${fetchedReleases.length})</h4>`;
+                    }
+
+                    checkScrollability();
+                });
+            } catch (error) {
+                console.error(`Fetch releases error: ${error.message}`);
+            }
+        });
     }
 
-    return div;
+    imageWrapper.appendChild(div);
+
+    return imageWrapper;
 }
 
 

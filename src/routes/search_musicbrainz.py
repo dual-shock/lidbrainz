@@ -22,4 +22,16 @@ async def fully_search(
         logger.error(f"ERROR: Exception in /fully_search endpoint: {e}")
         raise HTTPException(status_code=500, detail=f"Error searching MusicBrainz: {e}")
     
+@router.get("/releases")
+async def get_releases(
+    request: Request,
+    release_group_mbid: str
+):
+    try:
+        mb_client = request.app.state.musicbrainz_client
+        releases = await mb_client.get_releases(release_group_mbid)
+        return {"id": release_group_mbid, "releases": releases["releases"]}
+    except Exception as e:
+        logger.error(f"ERROR: Exception in /releases endpoint: {e}")
+        raise HTTPException(status_code=500, detail=f"Error retrieving releases from MusicBrainz: {e}")
 
