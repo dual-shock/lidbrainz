@@ -37,8 +37,8 @@ LidBrainz focuses mainly on being lightweight and fast, what i found lacking in 
 
 ### Release centered querying:
 <details>
-<summary>Example</summary>
-<pre>Lidarr itself and most forks or wrappers use Artist objects as the "main" form of adding and storing data, i didnt like this as 99% of the time i dont want ALL the releases of an artist, i usually just want 1-2 albums. LidBrainz handles this by automatically seeing if the artist of the release you want to add already exists in your library or not, and if it doesnt it'll add automatically add it with the correct release monitored (and all other releases un-monitored)</pre>
+<summary>LidBrainz handles everything through release groups, including handling and artists to your library</summary>
+<br>Lidarr itself and most forks or wrappers use Artist objects as the "main" form of adding and storing data, i didnt like this as 99% of the time i dont want ALL the releases of an artist, i usually just want 1-2 albums. LidBrainz handles this by automatically seeing if the artist of the release you want to add already exists in your library or not, and if it doesnt it'll add automatically add it with the correct release monitored (and all other releases un-monitored)
 </details>
 
 ### Speedy searches:
