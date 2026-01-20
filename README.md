@@ -120,4 +120,5 @@ basically anyone who wants more functionality than whats mentioned above.
 ## probable issues
 - Failing to add to Lidarr because of metadata profiles: if you try to add a single, but the metadata profile youve selected only includes albums, the single wont be present in your Lidarr library and therefore cannot be added. The fix for this is to use another metadata profile
 - Rate limiting: if you've improperly formatted your MusicBrainz user agent, youll automatically get rate limited. you can also get rate limited for other reasons, info on this is on the MusicBrainz docs. Note that, LidBrainz has a built-in rate limiter so if you are getting rate limited more than youd expect its likely because of improper config.
+- the ui has many problems, i just wanted it to look pretty cause i like pretty things
 
