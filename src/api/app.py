@@ -1,16 +1,14 @@
+from pathlib import Path
 from fastapi import FastAPI
 from contextlib import asynccontextmanager
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
-import asyncio
 
 from src.routes import search_musicbrainz, add_to_lidarr, interface_logs
 from src.logger import logger, cleanup_logging
-from pathlib import Path
 
 from src.api.lidarr_endpoint import LidarrClient
 from src.api.musicbrainz_endpoint import MusicBrainzClient
-
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -31,26 +29,18 @@ def start() -> FastAPI:
         lifespan=lifespan
     )
 
-    
-
     logger.info("adding routers")
     app.include_router(interface_logs.router, prefix="/lidbrainz/interface_logs", tags=["interface_logs"])
     app.include_router(search_musicbrainz.router, prefix="/lidbrainz/search_musicbrainz", tags=["search_musicbrainz"])
     app.include_router(add_to_lidarr.router, prefix="/lidbrainz/add_to_lidarr", tags=["add_to_lidarr"])
 
-
-
     logger.info("mounting static interface files")
     interface_path = Path(__file__).parent.parent.parent / "interface"
     app.mount("/", StaticFiles(directory=interface_path, html=True), name="interface")
-
     logger.info("adding root endpoint to serve index.html")
     @app.get("/")
     async def serve_index():
         return FileResponse(interface_path / "index.html")
 
-
-
-    
     logger.info("API server started")
     return app

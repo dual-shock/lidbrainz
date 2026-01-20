@@ -1,21 +1,14 @@
 .venv/
 env/
 venv/
+.env
 
 .idea
-
 __pycache__/
 *.py[cod]
-
-.env
-docker-compose.yml
-
 .vscode/
-test/
 
-.git/
-
+docker-compose.yml
 
 test/
 TODO.md
-README.md

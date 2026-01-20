@@ -1,252 +1,44 @@
-
-@font-face {
-    font-family: 'main-font';
-    src: url('./font/font-Retina.otf') format('opentype');
-    font-weight: 300;
-    font-style: normal;
-}
-@font-face {
-    font-family: 'main-font';
-    src: url('./font/font-Retina-Oblique.otf') format('opentype');
-    font-weight: 300;
-    font-style: italic;
-}
-
-
-
-@font-face {
-    font-family: 'main-font';
-    src: url('./font/font-Regular.otf') format('opentype');
-    font-weight: 400;
-    font-style: normal;
-}
-@font-face {
-    font-family: 'main-font';
-    src: url('./font/font-Oblique.otf') format('opentype');
-    font-weight: 400;
-    font-style: italic;
-}
-
-
-
-@font-face {
-    font-family: 'main-font';
-    src: url('./font/font-Medium.otf') format('opentype');
-    font-weight: 500;
-    font-style: normal;
-}
-@font-face {
-    font-family: 'main-font';
-    src: url('./font/font-Medium-Oblique.otf') format('opentype');
-    font-weight: 500;
-    font-style: italic;
-}
-
-
-
-@font-face {
-    font-family: 'main-font';
-    src: url('./font/font-Bold.otf') format('opentype');
-    font-weight: 700;
-    font-style: normal;
-}
-@font-face {
-    font-family: 'main-font';
-    src: url('./font/font-Bold-Oblique.otf') format('opentype');
-    font-weight: 700;
-    font-style: italic;
-}
-
-
-
-
-@font-face {
-    font-family: 'main-font';
-    src: url('./font/font-ExtraBold.otf') format('opentype');
-    font-weight: 800;
-    font-style: normal;
-}
-@font-face {
-    font-family: 'main-font';
-    src: url('./font/font-ExtraBold-Oblique.otf') format('opentype');
-    font-weight: 800;
-    font-style: italic;
-}
-
-
-
-
-@font-face {
-    font-family: 'main-font-semi';
-    src: url('./font/font-Retina-SemiCondensed.otf') format('opentype');
-    font-weight: 300;
-    font-style: normal;
-}
-@font-face {
-    font-family: 'main-font-semi';
-    src: url('./font/font-Retina-SemiCondensed-Oblique.otf') format('opentype');
-    font-weight: 300;
-    font-style: italic;
-}
-
-
-
-
-@font-face {
-    font-family: 'main-font-semi';
-    src: url('./font/font-SemiCondensed.otf') format('opentype');
-    font-weight: 400;
-    font-style: normal;
-}
-@font-face {
-    font-family: 'main-font-semi';
-    src: url('./font/font-SemiCondensed-Oblique.otf') format('opentype');
-    font-weight: 400;
-    font-style: italic;
-}
-
-
-
-
-@font-face {
-    font-family: 'main-font-semi';
-    src: url('./font/font-Medium-SemiCondensed.otf') format('opentype');
-    font-weight: 500;
-    font-style: normal;
-}
-@font-face {
-    font-family: 'main-font-semi';
-    src: url('./font/font-Medium-SemiCondensed-Oblique.otf') format('opentype');
-    font-weight: 500;
-    font-style: italic;
-}
-
-
-
-
-@font-face {
-    font-family: 'main-font-semi';
-    src: url('./font/font-Bold-SemiCondensed.otf') format('opentype');
-    font-weight: 700;
-    font-style: normal;
-}
-@font-face {
-    font-family: 'main-font-semi';
-    src: url('./font/font-Bold-SemiCondensed-Oblique.otf') format('opentype');
-    font-weight: 700;
-    font-style: italic;
-}
-
-
-
-
-@font-face {
-    font-family: 'main-font-semi';
-    src: url('./font/font-ExtraBold-SemiCondensed.otf') format('opentype');
-    font-weight: 800;
-    font-style: normal;
-}
-@font-face {
-    font-family: 'main-font-semi';
-    src: url('./font/font-ExtraBold-SemiCondensed-Oblique.otf') format('opentype');
-    font-weight: 800;
-    font-style: italic;
-}
-
-
-
-
-@font-face {
-    font-family: 'main-font-condensed';
-    src: url('./font/font-Retina-Condensed.otf') format('opentype');
-    font-weight: 300;
-    font-style: normal;
-}
-@font-face {
-    font-family: 'main-font-condensed';
-    src: url('./font/font-Retina-Condensed-Oblique.otf') format('opentype');
-    font-weight: 300;
-    font-style: italic;
-}
-
-
-
-
-@font-face {
-    font-family: 'main-font-condensed';
-    src: url('./font/font-Condensed.otf') format('opentype');
-    font-weight: 400;
-    font-style: normal;
-}
-@font-face {
-    font-family: 'main-font-condensed';
-    src: url('./font/font-Condensed-Oblique.otf') format('opentype');
-    font-weight: 400;
-    font-style: italic;
-}
-
-
-
-
-@font-face {
-    font-family: 'main-font-condensed';
-    src: url('./font/font-Medium-Condensed.otf') format('opentype');
-    font-weight: 500;
-    font-style: normal;
-}
-@font-face {
-    font-family: 'main-font-condensed';
-    src: url('./font/font-Medium-Condensed-Oblique.otf') format('opentype');
-    font-weight: 500;
-    font-style: italic;
-}
-
-
-
-
-@font-face {
-    font-family: 'main-font-condensed';
-    src: url('./font/font-Bold-Condensed.otf') format('opentype');
-    font-weight: 700;
-    font-style: normal;
-}
-@font-face {
-    font-family: 'main-font-condensed';
-    src: url('./font/font-Bold-Condensed-Oblique.otf') format('opentype');
-    font-weight: 700;
-    font-style: italic;
-}
-
-
-
-
-@font-face {
-    font-family: 'main-font-condensed';
-    src: url('./font/font-ExtraBold-Condensed.otf') format('opentype');
-    font-weight: 800;
-    font-style: normal;
-}
-@font-face {
-    font-family: 'main-font-condensed';
-    src: url('./font/font-ExtraBold-Condensed-Oblique.otf') format('opentype');
-    font-weight: 800;
-    font-style: italic;
-}
-
+@font-face {font-family: 'main-font';src: url('./font/font-Retina.otf') format('opentype');font-weight: 300;font-style: normal;}
+@font-face {font-family: 'main-font';src: url('./font/font-Retina-Oblique.otf') format('opentype');font-weight: 300;font-style: italic;}
+@font-face {font-family: 'main-font';src: url('./font/font-Regular.otf') format('opentype');font-weight: 400;font-style: normal;}
+@font-face {font-family: 'main-font';src: url('./font/font-Oblique.otf') format('opentype');font-weight: 400;font-style: italic;}
+@font-face {font-family: 'main-font';src: url('./font/font-Medium.otf') format('opentype');font-weight: 500;font-style: normal;}
+@font-face {font-family: 'main-font';src: url('./font/font-Medium-Oblique.otf') format('opentype');font-weight: 500;font-style: italic;}
+@font-face {font-family: 'main-font';src: url('./font/font-Bold.otf') format('opentype');font-weight: 700;font-style: normal;}
+@font-face {font-family: 'main-font';src: url('./font/font-Bold-Oblique.otf') format('opentype');font-weight: 700;font-style: italic;}
+@font-face {font-family: 'main-font';src: url('./font/font-ExtraBold.otf') format('opentype');font-weight: 800;font-style: normal;}
+@font-face {font-family: 'main-font';src: url('./font/font-ExtraBold-Oblique.otf') format('opentype');font-weight: 800;font-style: italic;}
+@font-face {font-family: 'main-font-semi';src: url('./font/font-Retina-SemiCondensed.otf') format('opentype');font-weight: 300;font-style: normal;}
+@font-face {font-family: 'main-font-semi';src: url('./font/font-Retina-SemiCondensed-Oblique.otf') format('opentype');font-weight: 300;font-style: italic;}
+@font-face {font-family: 'main-font-semi';src: url('./font/font-SemiCondensed.otf') format('opentype');font-weight: 400;font-style: normal;}
+@font-face {font-family: 'main-font-semi';src: url('./font/font-SemiCondensed-Oblique.otf') format('opentype');font-weight: 400;font-style: italic;}
+@font-face {font-family: 'main-font-semi';src: url('./font/font-Medium-SemiCondensed.otf') format('opentype');font-weight: 500;font-style: normal;}
+@font-face {font-family: 'main-font-semi';src: url('./font/font-Medium-SemiCondensed-Oblique.otf') format('opentype');font-weight: 500;font-style: italic;}
+@font-face {font-family: 'main-font-semi';src: url('./font/font-Bold-SemiCondensed.otf') format('opentype');font-weight: 700;font-style: normal;}
+@font-face {font-family: 'main-font-semi';src: url('./font/font-Bold-SemiCondensed-Oblique.otf') format('opentype');font-weight: 700;font-style: italic;}
+@font-face {font-family: 'main-font-semi';src: url('./font/font-ExtraBold-SemiCondensed.otf') format('opentype');font-weight: 800;font-style: normal;}
+@font-face {font-family: 'main-font-semi';src: url('./font/font-ExtraBold-SemiCondensed-Oblique.otf') format('opentype');font-weight: 800;font-style: italic;}
+@font-face {font-family: 'main-font-condensed';src: url('./font/font-Retina-Condensed.otf') format('opentype');font-weight: 300;font-style: normal;}
+@font-face {font-family: 'main-font-condensed';src: url('./font/font-Retina-Condensed-Oblique.otf') format('opentype');font-weight: 300;font-style: italic;}
+@font-face {font-family: 'main-font-condensed';src: url('./font/font-Condensed.otf') format('opentype');font-weight: 400;font-style: normal;}
+@font-face {font-family: 'main-font-condensed';src: url('./font/font-Condensed-Oblique.otf') format('opentype');font-weight: 400;font-style: italic;}
+@font-face {font-family: 'main-font-condensed';src: url('./font/font-Medium-Condensed.otf') format('opentype');font-weight: 500;font-style: normal;}
+@font-face {font-family: 'main-font-condensed';src: url('./font/font-Medium-Condensed-Oblique.otf') format('opentype');font-weight: 500;font-style: italic;}
+@font-face {font-family: 'main-font-condensed';src: url('./font/font-Bold-Condensed.otf') format('opentype');font-weight: 700;font-style: normal;}
+@font-face {font-family: 'main-font-condensed';src: url('./font/font-Bold-Condensed-Oblique.otf') format('opentype');font-weight: 700;font-style: italic;}
+@font-face {font-family: 'main-font-condensed';src: url('./font/font-ExtraBold-Condensed.otf') format('opentype');font-weight: 800;font-style: normal;}
+@font-face {font-family: 'main-font-condensed';src: url('./font/font-ExtraBold-Condensed-Oblique.otf') format('opentype');font-weight: 800;font-style: italic;}
 
 :root {
-    
     --font-family: 'main-font', "segoe ui";
     --font-family-semi: 'main-font-semi', "segoe ui";
     --font-family-condensed: 'main-font-condensed', "segoe ui";
-    
     
     --font-retina: 300;
     --font-regular: 400;
     --font-medium: 500;
     --font-bold: 700;
     --font-extrabold: 800;
-    
     
     --background-color: #151515;
     --background-color-input:#111111 ;
@@ -272,8 +64,6 @@
     --yellow-secondary-text: #C4A23A;
     --yellow-glow-text: #c4a23a52;
 
-
-
     --main-text: #D4B0BC;
     --main-glow-text: #d4b0bc56;
 
@@ -292,12 +82,10 @@
     --main-muted-text: #955764;
     --main-hover-text: #955764; */
 
-    
     --white-text: #D2C1B9;
     --white-secondary-text: #928781;
     --white-tertiary-text: #9F8876;
     --white-glow-text: rgba(228, 216, 211, 0.504);
-
 
     --crt-red: rgba(218, 49, 49);
     --crt-green: rgb(112, 159, 115);

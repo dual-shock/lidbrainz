@@ -5,12 +5,9 @@ import uvicorn
 import asyncio
 from src.logger import logger
 
-
-
-
-
 def main():
     Config.check()
+    
     api_app = start()
 
     config = uvicorn.Config(
@@ -20,16 +17,15 @@ def main():
         log_level="debug",
         loop="asyncio",
     )
+
     server = uvicorn.Server(config)
+    
     try: 
         server.run()
 
     except (KeyboardInterrupt, asyncio.CancelledError) as e:
         logger.info("Manually shutting down server due to KeyboardInterrupt...")
         pass
-
-
-
 
 if __name__ == "__main__":
     main()
