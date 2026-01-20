@@ -323,7 +323,14 @@ async function handleSearch() {
         artist = "Various Artists"
     }
 
-    const query = artist ? `releasegroup:${release} AND artist:${artist}` : release;
+    let query;
+    if (artist && release) {
+        query = `releasegroup:${release} AND artist:${artist}`;
+    } else if (artist) {
+        query = `artist:"${artist}"`;
+    } else {
+        query = release;
+    }
 
     if (!query) return;
 
