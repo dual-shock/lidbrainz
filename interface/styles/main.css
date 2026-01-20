@@ -112,7 +112,7 @@ body {
                 display:flex;
                 flex-direction: row;
             }
-                .event-type{}
+                
                 .event-time{margin-left:5px;}
                 .event-type.INFO{
                     color:var(--green-text);
@@ -206,9 +206,7 @@ body {
     margin-left: 10px;
 }
 
-#artist-search-input{
 
-}
 
 #search-limit-container {
     display: flex;
@@ -368,11 +366,7 @@ body {
     margin-left: auto;
 }
 
-.results-box .releaseGrpArtist,
-.results-box .releaseGrpName,
-.results-box .releaseGrpType{
 
-}
 .releaseGrpName a {
     color: var(--white-text);
     text-decoration: none;
@@ -381,13 +375,6 @@ body {
     text-decoration: underline;
 }
 
-.results-box .matchScore {
-
-}
-
-.results-box .addButton {
-
-}
 .results-box .addButton{
     margin-left: 10px;
     margin-top: -5px;
@@ -488,7 +475,6 @@ body {
     width:fit-content;
 }
 
-.release > .releaseName {}
 .releaseName a {
     color: var(--white-text);
     text-decoration: none;
@@ -497,15 +483,13 @@ body {
     text-decoration: underline;
 }
 
-.release > .releaseFormat {}
-.release > .releaseTracks {}
-.release > .releaseStatus {}
+
 .release img {
     vertical-align: middle;
     height: 0.90em;
     margin-right: 10px;
 }
-.release > .releaseCountry {}
+
 .release .releaseYear {
     margin-left: 10px;
 }
@@ -666,12 +650,8 @@ body {
     padding-right:10px;
     align-self:flex-end;
 }
-#download-settings-select{
-
-}
 #download-settings-label{
     display: flex;
-    /* cursor: pointer; */
     flex-direction:column;
 }
     #auto-download-checkbox-container {
