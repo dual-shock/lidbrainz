@@ -12,5 +12,5 @@ services:
       - MUSICBRAINZ_USERAGENT=${MUSICBRAINZ_USERAGENT}
     ports: 
       - "8080:8080"  
-    # this exposes port on your host, to change it modify xxxx:8080, xxxx being
+    # this exposes the port on your host, to change it modify xxxx:8080, xxxx being
     # the port you want to expose. This is automatically handled in unraid. 
