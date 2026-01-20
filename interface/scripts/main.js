@@ -1,5 +1,14 @@
 //TODO modularize this mess
 
+function convertTime(dateObj) {
+  let hours = dateObj.getHours(); 
+  let minutes = dateObj.getMinutes(); 
+  let seconds = dateObj.getSeconds(); 
+  const pad = (num) => num.toString().padStart(2, '0');
+  console.log(`${pad(hours)}:${pad(minutes)}:${pad(seconds)}`)
+  return `${pad(hours)}:${pad(minutes)}:${pad(seconds)}`;
+}
+
 document.addEventListener('DOMContentLoaded', async () => {
     const lidbrainzEventLog = document.getElementById('logs-scrollable');
     const lidbrainzEventSource = new EventSource('/lidbrainz/interface_logs/interface_logs');
@@ -8,11 +17,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     if(lidarrUrl == undefined){
         const eventItem = document.createElement('div');
         eventItem.className = 'event-item';
+        const timeString = convertTime(new Date());
         eventItem.innerHTML = 
         `
             <div class="first-row">
                 <h5 class="text default event-type WARNING">WARNING</h5>
-                <h5 class="text white event-time">[${new Date().toLocaleTimeString()}]</h5>
+                <h5 class="text white event-time">[${timeString}]</h5>
             </div>
             <div class="second-row">
                 <h4 class="text event-content-indent">└─╲</h5>
@@ -32,11 +42,12 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         const eventItem = document.createElement('div');
         eventItem.className = 'event-item';
+        const timeString = convertTime(new Date());
         eventItem.innerHTML = 
         `
             <div class="first-row">
                 <h5 class="text default event-type ${data.event_type}">${data.event_type}</h5>
-                <h5 class="text white event-time">[${data.event_time}]</h5>
+                <h5 class="text white event-time">[${timeString}]</h5>
             </div>
             <div class="second-row">
                 <h4 class="text event-content-indent">└─╲</h5>
@@ -49,11 +60,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     if(lidarrUrl != undefined && lidbrainzEventLog.children.length === 0){
         const eventItem = document.createElement('div');
         eventItem.className = 'event-item';
+        const timeString = convertTime(new Date());
         eventItem.innerHTML = 
         `
             <div class="first-row">
                 <h5 class="text default event-type INFO">INFO</h5>
-                <h5 class="text white event-time">[${new Date().toLocaleTimeString()}]</h5>
+                <h5 class="text white event-time">[${timeString}]</h5>
             </div>
             <div class="second-row">
                 <h4 class="text event-content-indent">└─╲</h5>
@@ -87,10 +99,12 @@ function loadAllCoverImages(parentContainer) {
         const tempImg = new Image();
         tempImg.src = thumbUrl;
 
+        const resultBox = imageWrapper.querySelector('.results-box.release-group-result');
+        const initialHeight = resultBox.getBoundingClientRect().height;
+
         tempImg.decode()
             .then(() => {
-                const resultBox = imageWrapper.querySelector('.results-box.release-group-result');
-                const initialHeight = resultBox.getBoundingClientRect().height;
+
                 tempImg.style.height = `${initialHeight - 2}px`;
                 const imageDiv = document.createElement('div');
                 imageDiv.className = 'results-box-image';

@@ -93,6 +93,7 @@ class MusicBrainzClient:
                 delay = 2.0 + (attempt * 0.5)
 
                 if attempt < self.RETRIES:
+                    logger.warning(f"Network error on attempt {attempt}. Retrying in {delay:.2f} seconds...", extra={"frontend": True})
                     logger.warning(f"Network error on attempt {attempt} Retrying in {delay:.2f} seconds...")
                     logger.warning(f"Error details: {type(exc).__name__}: {exc}")
 

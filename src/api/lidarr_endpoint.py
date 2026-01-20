@@ -456,6 +456,7 @@ Either try a less strict metadata profile or add release manually."""
                 logger.info(f"triggering search for release group to start download")
                 await self.trigger_search_for_release_group(release_group_lrid=release_group['id'])
 
+            logger.info(f"successfully fully added release to Lidarr", extra={"frontend": True})
             return monitored_release_group
         
         except Exception as e:

@@ -1,7 +1,16 @@
 import logging
 import asyncio
 import json
+import os
+from zoneinfo import ZoneInfo
 from datetime import datetime
+
+if os.getenv("TZ") is not None:
+    try: 
+        tz_name = os.getenv("TZ", "UTC")
+        current_time = datetime.now(ZoneInfo(tz_name))
+    except:
+        pass
 
 sse_event_queue = asyncio.Queue() 
 class SSEHandler(logging.Handler):

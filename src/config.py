@@ -2,6 +2,7 @@ import os
 from dotenv import load_dotenv
 from src.logger import logger
 
+
 load_dotenv()
 class Config: 
     LIDARR_URL = os.getenv("LIDARR_URL")
