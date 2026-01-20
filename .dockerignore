@@ -1,28 +1,22 @@
 .venv/
 __pycache__/
 .env
+env/
+venv/
 
 .git/
 
-
 tests/
+test/
 docs/
 todo.md
 README.md
 
-
-.venv/
-env/
-venv/
-
 __pycache__/
 *.py[cod]
-
 
 docker-compose.yml
 
 .vscode/
-test/
-
 .idea/
 *.iml

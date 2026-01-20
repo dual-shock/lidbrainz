@@ -18,7 +18,10 @@ class SSEHandler(logging.Handler):
 
         try:
             event_json = json.dumps(event_json)
-            loop = asyncio.get_event_loop()
+            try:
+                loop = asyncio.get_running_loop()
+            except RuntimeError:
+                loop = asyncio.get_event_loop()
             loop.call_soon_threadsafe(sse_event_queue.put_nowait, event_json)
         
         except RuntimeError:
@@ -49,5 +52,8 @@ def cleanup_logging():
 
     logging.shutdown()
 
-logger = setup_logging()
+if not logging.getLogger().handlers:
+    logger = setup_logging()
+else:
+    logger = logging.getLogger()
     

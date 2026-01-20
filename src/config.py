@@ -22,17 +22,17 @@ class Config:
         if not cls.LIDARR_URL:
             logger.error("LIDARR_URL not found in environment", extra={"frontend": True})
         
-        else: logger.info(f"LIDARR_URL found: {cls.LIDARR_URL[:4]}****")
+        else: logger.info(f"LIDARR_URL found")
         
         if not cls.LIDARR_APIKEY:
             logger.error("LIDARR_APIKEY not found in environment", extra={"frontend": True})
         
-        else: logger.info(f"LIDARR_APIKEY found: {cls.LIDARR_APIKEY[:4]}****")
+        else: logger.info(f"LIDARR_APIKEY found!")
         
         if not cls.MUSICBRAINZ_USERAGENT:
             logger.error("MUSICBRAINZ_USERAGENT not found in environment", extra={"frontend": True})
         
-        else: logger.info(f"MUSICBRAINZ_USERAGENT found: {cls.MUSICBRAINZ_USERAGENT[:4]}****")
+        else: logger.info(f"MUSICBRAINZ_USERAGENT found!")
 
 
 

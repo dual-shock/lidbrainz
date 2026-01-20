@@ -63,6 +63,17 @@ document.addEventListener('DOMContentLoaded', async () => {
         lidbrainzEventLog.prepend(eventItem); 
     }
 });
+
+
+
+window.addEventListener('beforeunload', () => {
+    if (lidbrainzEventSource) {
+        lidbrainzEventSource.close();
+    }
+});
+
+
+
 const searchCache = {};
 
 
@@ -322,6 +333,7 @@ async function handleSearch() {
 
 
 confirmSearchButton.addEventListener('click', handleSearch);
+
 releaseSearchInput.addEventListener('keypress', (e) => {
     if (e.key === 'Enter') handleSearch();
 });
