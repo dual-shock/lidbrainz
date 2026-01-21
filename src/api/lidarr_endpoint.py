@@ -20,24 +20,29 @@ class LidarrClient:
     async def get_client(self) -> httpx.AsyncClient:
         logger.info("getting lidarr httpx AsyncClient")
 
-        if not self.client or self.client.is_closed:
-            if not Config.LIDARR_URL:
-                logger.error("LIDARR_URL is not configured", extra={"frontend": True})
-                raise ValueError("LIDARR_URL or LIDARR_APIKEY is not configured")
-            
-            if not Config.LIDARR_APIKEY:
-                logger.error("LIDARR_APIKEY is not configured", extra={"frontend": True})
-                raise ValueError("LIDARR_URL or LIDARR_APIKEY is not configured")
+        try:
+            if not self.client or self.client.is_closed:
+                if not Config.LIDARR_URL:
+                    logger.error("LIDARR_URL is not configured", extra={"frontend": True})
+                    raise ValueError("LIDARR_URL or LIDARR_APIKEY is not configured")
+                
+                if not Config.LIDARR_APIKEY:
+                    logger.error("LIDARR_APIKEY is not configured", extra={"frontend": True})
+                    raise ValueError("LIDARR_URL or LIDARR_APIKEY is not configured")
 
-            self.client = httpx.AsyncClient(
-                base_url=Config.LIDARR_URL.rstrip("/"),
-                headers={
-                    "X-Api-Key": Config.LIDARR_APIKEY,
-                    "Content-Type": "application/json"
-                },
-                timeout=30.0,
-                http2=True 
-            )
+                self.client = httpx.AsyncClient(
+                    base_url=Config.LIDARR_URL.rstrip("/"),
+                    headers={
+                        "X-Api-Key": Config.LIDARR_APIKEY,
+                        "Content-Type": "application/json"
+                    },
+                    timeout=30.0,
+                    http2=True 
+                )
+        except Exception as e:
+            logger.error(f"failed to create lidarr httpx AsyncClient, traceback in logs", extra={"frontend": True})
+            logger.error(traceback.format_exc())
+            raise e
         
         return self.client
     
