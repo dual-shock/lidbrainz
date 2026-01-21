@@ -8,7 +8,7 @@ A simple one-page interface to manage all Lidarr requests, built upon the MusicB
 
 ![Alt text](assets/videos/demo_1.gif)
 
-_Please note; this is a silly and fun container i made for my own server and to get a docker container project under my belt, its not vibecoded so its probably kinda shitty, the code is a mess, and theres certainly better alternatives out there. buuut if you like it thats awesome :)_<3
+_Please note; this is a silly and fun container i made for my own server and to get a docker container project under my belt, **its not vibecoded** so its probably kinda shitty, the code is a mess, and theres certainly better alternatives out there. buuut if you like it thats awesome :)_<3
 
 
 
